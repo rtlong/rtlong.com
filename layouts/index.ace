@@ -1,0 +1,5 @@
+= content main
+  p
+    a href="https://github.com/rtlong" Github
+  p
+    a href="mailto:hello@rtlong.com" Email: hello@rtlong.com

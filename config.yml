@@ -1,0 +1,26 @@
+---
+baseURL: "/"
+languageCode: "en-us"
+log: true # Enable Logging
+metaDataFormat: "yaml"
+verbose: true # verbose output
+verboseLog: true # verbose logging
+
+title: RTLong
+author:
+  main: Ryan Taylor Long
+
+params:
+  name: Ryan Long
+  description: Software Engineer in San Francisco
+  email: ryan@rtlong.com
+  bio: Software Engineer in San Francisco
+  avatarURL: https://gravatar.com/avatar/053e38be1bd8b18bf8b1c26e11a797ff?s=256
+
+  header:
+    title: Ryan Long
+    logoImageURL: signature.svg
+    shortBio: "Software&nbsp;Engineer in&nbsp;San&nbsp;Francisco"
+
+# taxonomies: {}
+# permalinks: {}

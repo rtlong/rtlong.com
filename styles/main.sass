@@ -1,0 +1,85 @@
+header#header
+	margin: 0
+	text-align: center
+	/* padding: 8em 0; */
+
+	h1.name
+		font-size: 2em
+		line-height: 2
+		display: none
+
+	h2.subname
+		font-size: 1.2em
+		line-height: 2
+		margin-top: 1em
+
+	svg#logo
+		width: 15em
+		display: inline !important
+
+
+#container
+	// margin: 2em 4em 0
+	width: 100%
+
+	section
+		margin: 1em 0
+
+	.list-inline > li
+		margin: 5px
+		background-color: #ccc
+		border-radius: 5px
+
+
+@media screen
+	body
+		background-color: #ecebe8
+		font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif
+
+	#logo path
+		fill: #ffffff !important
+
+	#header
+		background:
+			color: #61656e
+			image: url('/background.jpg')
+			repeat: no-repeat
+		color: white
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.81)
+
+@media screen
+	@media (min-width: 1201px)
+		#header
+			background:
+				size: 100% auto
+				position: 50% 33%
+			min-height: 12em
+			padding: 3em
+
+	@media (max-width: 1200px)
+		#header
+			background:
+				size: 1200px auto
+				position: 50% 33%
+			min-height: 12em
+			padding: 3em
+
+	@media (max-height: 400px)
+		body
+			font-size: 0.6em
+
+		#header
+			min-height: 1em
+			padding: 1em
+
+		#logo
+			width: 5em
+			float: left
+
+		h2.subname
+			font-size: 1em
+			margin-top: 0
+			text-align: right
+
+		#container
+			margin: 2em

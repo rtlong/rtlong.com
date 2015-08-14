@@ -1,0 +1,285 @@
+= content main
+  {{with .Site.Data.resume.resume}}
+    {{with .basics}}
+      section class="name row"
+        div class="col-sm-9 col-sm-push-3"
+          h1 {{.name}}
+          h2 {{.label}}
+
+      section class="contact row"
+        aside class="col-sm-3"
+          h3 Contact
+        div class="col-sm-9"
+          dl class="dl-horizontal"
+            {{with .email}}
+              dt Email
+              dd {{.}}
+            {{end}}
+            {{with .phone}}
+              dt Phone
+              dd {{.}}
+            {{end}}
+            {{with .website}}
+              dt Website
+              dd
+                a href="{{.}}" {{.}}
+            {{end}}
+
+      {{with .summary}}
+        section class="about row"
+          aside class="col-sm-3"
+            h3 About
+          div class="col-sm-9"
+            p {{. | markdownify}}
+      {{end}}
+
+      {{with .profiles}}
+        section class="profiles row"
+          aside class="col-sm-3"
+            h3 Profiles
+
+          div class="col-sm-9"
+            dl class="dl-horizontal"
+              {{range .}}
+                dt {{.network}}
+                dd
+                  a href="{{.url}}" {{with .username}}{{.}}{{else}}{{.url}}{{end}}
+              {{end}}
+      {{end}}
+    {{end}}
+
+    {{with .work}}
+      section class="work row"
+        aside class="col-sm-3"
+          h3 Work
+        div class="col-sm-9"
+          {{range .}}
+            div class="row"
+              div class="col-sm-12"
+                h4 class="strike-through" {{.company}}
+                div class="date" {{.startDate}} — {{with .endDate}}{{.}}{{else}}present{{end}}
+
+                {{with .location}}
+                  div class="location" {{.}}
+                {{end}}
+
+                {{with .websites}}
+                  div class="website pull-right"
+                    a href="{{.}}" {{.}}
+                {{end}}
+
+                {{with .position}}
+                  div class="position" {{.}}
+                {{end}}
+
+                {{with .summary}}
+                  div class="summary"
+                    p {{. | markdownify}}
+                {{end}}
+
+                {{with .highlights}}
+                  h4 Highlights
+                  ul class="highlights"
+                    {{range .}}
+                      li class="bullet" {{.}}
+                    {{end}}
+                {{end}}
+
+                {{with .technologies}}
+                  h4 Technologies Used
+                  ul class="technologies list-inline"
+                    {{range .}}
+                      li {{.}}
+                    {{end}}
+                {{end}}
+          {{end}}
+    {{end}}
+
+    {{with .volunteer}}
+      section class="volunteer row"
+        aside class="col-sm-3"
+          h3 Volunteer
+        div class="col-sm-9"
+          div class="row"
+            {{range .}}
+              div class="col-sm-12"
+                h4 class="strike-through" {{.organization}}
+                span class="date" {{.startDate}} — {{.endDate}}
+                {{with .website}}
+                  div class="website pull-right"
+                    a href="{{.}}" {{.}}
+                {{end}}
+                {{with .position}}
+                  div class="position" {{.}}
+                {{end}}
+                {{with .summary}}
+                  div class="summary"
+                    p {{.}}
+                {{end}}
+                {{with .highlights}}
+                  h4 Highlights
+                  ul class="highlights"
+                    {{range .}}
+                      li class="bullet" {{.}}
+                    {{end}}
+                {{end}}
+            {{end}}
+    {{end}}
+
+    {{with .education}}
+      section class="education row"
+        aside class="col-sm-3"
+          h3 Education
+        div class="col-sm-9"
+          div class="row"
+            {{range .}}
+              div class="col-sm-12"
+                h4 class="strike-through" {{.institution}}
+                div class="date" {{.startDate}} — {{.endDate}}
+                {{with .area}}
+                  div class="area" {{.}}
+                {{end}}
+                {{with .studyType}}
+                  div class="studyType" {{.}}
+                {{end}}
+
+                {{with .courses}}
+                  h4 Courses
+                  ul class="courses"
+                    {{range .}}
+                      li {{.}}
+                    {{end}}
+                {{end}}
+            {{end}}
+    {{end}}
+
+
+    {{with .awards}}
+      section class="awards row"
+        aside class="col-sm-3"
+          h3 Awards
+        div class="col-sm-9"
+          div class="row"
+            {{range .}}
+              div class="col-sm-12"
+                h4 class="strike-through"
+                  span {{.title}}
+                {{with .date}}
+                  div class="date pull-right"
+                    em Awarded
+                    {{.}}
+                {{end}}
+                {{with .awarder}}
+                  div class="awarder"
+                    em by
+                    strong {{.}}
+                {{end}}
+                {{with .summary}}
+                  div class="summary" {{. | markdownify}}
+                {{end}}
+            {{end}}
+    {{end}}
+
+    {{with .publications}}
+      section class="publications row"
+        aside class="col-sm-3"
+          h3 Publications
+        div class="col-sm-9"
+          div class="row"
+            {{range .}}
+              div class="col-sm-12"
+                h4 class="strike-through"
+                  span {{.name}}
+                  span class="date" {{.releaseDate}}
+                {{with .website}}
+                  div class="website pull-right"
+                    a href="{{.}}" {{.}}
+                {{end}}
+                {{with .publisher}}
+                  div class="publisher"
+                    em Published by
+                    strong {{.}}
+                {{end}}
+                {{with .summary}}
+                  div class="summary"
+                    p {{. | markdownify}}
+                {{end}}
+            {{end}}
+    {{end}}
+
+    {{with .skills}}
+      section class="skills row"
+        aside class="col-sm-3"
+          h3 Skills
+        div class="col-sm-9"
+          div class="row"
+            {{range .}}
+              div class="col-sm-6"
+                {{with .name}}
+                  div class="name"
+                    h4 {{.}}
+                {{end}}
+                {{with .level}}
+                  div class="level"
+                    h4 {{.}}
+                {{end}}
+                {{with .keywords}}
+                  ul class="keywords"
+                    {{range .}}
+                      li {{.}}
+                    {{end}}
+                {{end}}
+            {{end}}
+    {{end}}
+
+    {{with .languages}}
+      section class="languages row"
+        aside class="col-sm-3"
+          h3 Languages
+        div class="col-sm-9"
+          div class="row"
+            {{range .}}
+              div class="col-sm-6"
+                {{with .language}}
+                  div class="language" {{.}}
+                {{end}}
+                {{with .fluency}}
+                  div class="fluency" {{.}}
+                {{end}}
+            {{end}}
+    {{end}}
+
+    {{with .interests}}
+      section class="interests row"
+        aside class="col-sm-3"
+          h3 Interests
+        div class="col-sm-9"
+          div class="row"
+            {{range .}}
+              div class="col-sm-6"
+                div class="name"
+                  h4 {{.name}}
+                {{with .keywords}}
+                  ul class="keywords"
+                    {{range .}}
+                      li {{.}}
+                    {{end}}
+                {{end}}
+            {{end}}
+    {{end}}
+
+    {{with .references}}
+      section class="references row"
+        aside class="col-sm-3"
+          h3 References
+        div class="col-sm-9"
+          div class="row"
+            {{range .}}
+              div class="col-sm-12"
+                blockquote class="reference"
+                  p {{.reference | markdownify}}
+                  footer {{.name}}
+            {{end}}
+    {{end}}
+
+  {{end}}
