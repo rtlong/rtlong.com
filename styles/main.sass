@@ -1,5 +1,5 @@
 header#header
-	margin: 0
+	margin: 0 0 4em
 	text-align: center
 	/* padding: 8em 0; */
 
@@ -17,17 +17,74 @@ header#header
 		width: 15em
 		display: inline !important
 
+hr
+	border-color: #888
+
+h1, h2, h3, h4, h5, h6
+	&:first-child
+		margin-top: 0
+
+	&:first-child:last-child
+		margin: 0
+
 #container
-	width: 100%
+	// width: 100%
+	max-width: 1000px
+	// margin: 0 auto
+
+	// h3
+	// 	margin: 0
 
 	section
-		margin: 1em 0
+		&.about
+			.portrait
+				max-width: 6em
+				padding-left: 1em
+
+		&.work, &.volunteer
+			.date-location
+				text-align: right
+			.position
+				clear: left
+				margin: 0 0 0 1em
+			header
+				margin-bottom: 1em
+				h2
+					margin: 0
+		&.references
+			blockquote.reference
+				border-left-color: #ADADAD
+				font-size: 1.1em
 
 	.list-inline > li
 		margin: 5px
 		background-color: #ccc
 		border-radius: 5px
 
+	dl.dl-horizontal
+		margin-bottom: 0
+
+		dt
+			text-align: left
+		dd
+			address
+				margin: 0
+
+	hr.range:last-child
+		display: none
+
+	h1
+		font-size: 2em
+	h2
+		font-size: 1.5em
+	h3
+		font-size: 1.4em
+	h4
+		font-size: 1.3em
+	h5
+		font-size: 1.2em
+	h6
+		font-size: 1.1em
 
 @media screen
 	body

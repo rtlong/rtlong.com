@@ -19,7 +19,7 @@ html lang=en
         h1.name {{.Site.Params.header.title}}
         h2.subname {{.Site.Params.header.shortBio | safeHTML}}
 
-    #container.wrapper
+    #container.wrapper.container-fluid
       = yield main
 
     script src="/bundle.js" charset="utf-8"
