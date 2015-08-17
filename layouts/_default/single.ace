@@ -1,2 +1,4 @@
 = content main
-  {{.Content}}
+  .row
+    .col-md-12
+      {{.Content}}

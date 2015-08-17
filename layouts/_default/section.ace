@@ -1,6 +1,8 @@
 = content main
-  ul
-    {{ range .Data.Pages }}
-    li
-      a href={{.Permalink}} {{.Title}}
-    {{ end }}
+  .row
+    .col-md-12
+      ul
+        {{ range .Data.Pages }}
+        li
+          a href={{.Permalink}} {{.Title}}
+        {{ end }}

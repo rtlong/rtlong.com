@@ -6,7 +6,7 @@ module.exports = {
     'bootstrap-sass!./config/bootstrap-sass.config.js'
   ],
   output: {
-    path: __dirname + "/public",
+    path: __dirname + "/static",
     filename: "bundle.js",
   },
   devtool: 'inline-source-map',

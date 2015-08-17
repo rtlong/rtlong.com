@@ -1,5 +1,7 @@
 = content main
-  {{.Render "resume"}}
+  {{range first 1 .Data.Pages}}
+    {{.Render "resume"}}
+  {{end}}
 
 = content footer
   .row

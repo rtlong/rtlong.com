@@ -1,5 +1,11 @@
 = content main
-  p
-    a href="https://github.com/rtlong" Github
-  p
-    a href="mailto:hello@rtlong.com" Email: hello@rtlong.com
+  .row.text-center
+    .col-sm-12
+      nav.home-page
+        ul.list-inline
+          li
+            a href="https://github.com/rtlong" Github
+          li
+            a href="mailto:{{.Site.Params.email}}" Email
+          li
+            a href="/resume" Resume

@@ -3,15 +3,11 @@ header#header
 	text-align: center
 	/* padding: 8em 0; */
 
-	h1.name
-		font-size: 2em
-		line-height: 2
-		display: none
-
-	h2.subname
+	.subname
 		font-size: 1.2em
 		line-height: 2
 		margin-top: 1em
+		color: white
 
 	svg#logo
 		width: 15em
@@ -24,19 +20,18 @@ h1, h2, h3, h4, h5, h6
 	&:first-child
 		margin-top: 0
 
-	&:first-child:last-child
-		margin: 0
+.container-fluid
+	max-width: 70em
 
 #container
-	// width: 100%
-	max-width: 1000px
-	// margin: 0 auto
-
-	// h3
-	// 	margin: 0
+	text-align: justify
+	min-height: 500px
 
 	section
 		&.about
+			.summary
+				// padding-right: 6em
+				max-width: 70em
 			.portrait
 				max-width: 6em
 				padding-left: 1em
@@ -44,22 +39,31 @@ h1, h2, h3, h4, h5, h6
 		&.work, &.volunteer
 			.date-location
 				text-align: right
+				padding-top: 2px
 			.position
 				clear: left
 				margin: 0 0 0 1em
 			header
 				margin-bottom: 1em
-				h2
+				h3
 					margin: 0
 		&.references
 			blockquote.reference
 				border-left-color: #ADADAD
 				font-size: 1.1em
 
-	.list-inline > li
+	.list-badges.list-inline li
 		margin: 5px
-		background-color: #ccc
+		background-color: #B3CBE0
 		border-radius: 5px
+
+	nav.home-page > .list-inline > li
+		padding: 0.5em 0
+		border-right: 1px solid #ADADAD
+		width: 10em
+
+		&:last-child
+			border-right: none
 
 	dl.dl-horizontal
 		margin-bottom: 0
@@ -86,15 +90,23 @@ h1, h2, h3, h4, h5, h6
 	h6
 		font-size: 1.1em
 
+footer#footer
+	// background-color: #5A5A5A
+	// color: white
+	margin-top: 2em
+	padding: 1em 0
+	p
+		font-size: 80%
+
 @media screen
 	body
 		background-color: #ecebe8
 		font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif
 
-	#logo path
+	svg#logo path
 		fill: #ffffff !important
 
-	#header
+	header#header
 		background:
 			color: #61656e
 			image: url('/background.jpg')
@@ -103,38 +115,49 @@ h1, h2, h3, h4, h5, h6
 		box-shadow: 0 0 20px rgba(0, 0, 0, 0.81)
 
 @media screen
+	header#header
+		min-height: 12em
+		padding: 3em
+
 	@media (min-width: 1201px)
-		#header
+		header#header
 			background:
 				size: 100% auto
 				position: 50% 33%
-			min-height: 12em
-			padding: 3em
 
 	@media (max-width: 1200px)
-		#header
+		header#header
 			background:
 				size: 1200px auto
 				position: 50% 33%
-			min-height: 12em
-			padding: 3em
 
-	@media (max-height: 400px)
-		body
-			font-size: 0.6em
-
-		#header
-			min-height: 1em
+	@media (max-width: 800px)
+		header#header
+			min-height: 8em
 			padding: 1em
 
-		#logo
-			width: 5em
-			float: left
+			svg#logo
+				width: 10em
+			.subname
+				margin: 0
 
-		h2.subname
-			font-size: 1em
-			margin-top: 0
-			text-align: right
 
-		#container
-			margin: 2em
+	// @media (max-height: 400px)
+	//	body
+	//		font-size: 0.6em
+
+	//	header#header
+	//		min-height: 1em
+	//		padding: 1em
+
+	//		svg#logo
+	//			width: 5em !important
+	//			float: left
+
+	//		.subname
+	//			font-size: 1em
+	//			margin-top: 0
+	//			text-align: right
+
+	//	#container
+	//		margin: 2em

@@ -12,9 +12,9 @@ author:
 
 params:
   name: Ryan Long
-  description: Software Engineer in San Francisco
-  email: ryan@rtlong.com
-  bio: Software Engineer in San Francisco
+  siteDescription: Software Engineer in San Francisco
+  email: hello@rtlong.com
+  # bio: Software Engineer in San Francisco
   avatarURL: https://gravatar.com/avatar/053e38be1bd8b18bf8b1c26e11a797ff?s=256
 
   header:
