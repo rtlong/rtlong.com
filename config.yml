@@ -5,6 +5,7 @@ log: true # Enable Logging
 metaDataFormat: "yaml"
 verbose: true # verbose output
 verboseLog: true # verbose logging
+uglyURLs: true
 
 title: RTLong
 author:

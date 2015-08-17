@@ -8,4 +8,4 @@
           li
             a href="mailto:{{.Site.Params.email}}" Email
           li
-            a href="/resume" Resume
+            a href="/resume.html" Resume
