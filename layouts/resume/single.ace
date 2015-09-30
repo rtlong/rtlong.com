@@ -8,6 +8,6 @@
         Last Updated:
           {{if .Date.IsZero}}
             {{dateFormat "2 Jan 2006" .Site.LastChange}}
-              {{else}}
-                {{dateFormat "2 Jan 2006" .Date}}
-              {{end}}
+          {{else}}
+            {{dateFormat "2 Jan 2006" .Date}}
+          {{end}}
