@@ -9,7 +9,6 @@ deploy:
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
     bucket: rtlong.com
-    endpoint: rtlong.com.s3-website-us-east-1.amazonaws.com
     local_dir: public
     skip_cleanup: true
     upload-dir: staging
@@ -20,7 +19,6 @@ deploy:
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
     bucket: rtlong.com
-    endpoint: rtlong.com.s3-website-us-east-1.amazonaws.com
     local_dir: public
     skip_cleanup: true
     upload-dir: production
