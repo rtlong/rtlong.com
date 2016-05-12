@@ -1,9 +1,18 @@
 language: go
+
 go:
   - 1.4
+
 install:
   - go get github.com/spf13/hugo
+  - pip install awscli
+
+after_install:
+  - aws configure set preview.cloudfront true
+
 script: make
+sudo: false
+
 deploy:
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY
@@ -15,6 +24,7 @@ deploy:
     on:
       repo: rtlong/rtlong.com
       branch: master
+
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
@@ -22,6 +32,13 @@ deploy:
     local_dir: public
     skip_cleanup: true
     upload-dir: production
+    on:
+      repo: rtlong/rtlong.com
+      branch: production
+
+after_deploy:
+  - provider: script
+    script: 'aws cloudfront create-invalidation --distribution-id E2TN83NW9MLEUM --paths /\*'
     on:
       repo: rtlong/rtlong.com
       branch: production
