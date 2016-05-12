@@ -59,7 +59,8 @@
             {{range .}}
               dt {{.network}}
               dd
-                a href="{{.url}}" {{with .username}}{{.}}{{else}}{{.url}}{{end}}
+                // a href="{{.url}}" {{with .username}}{{.}}{{else}}{{.url}}{{end}}
+                a href="{{.url}}" {{.url}}
             {{end}}
     {{end}}
   {{end}}
