@@ -45,6 +45,12 @@
               img src="{{.}}" width=100 class="img-responsive img-circle" alt="my portrait"
           {{end}}
           p class="summary" {{.summary | markdownify}}
+
+          dl class="dl-horizontal"
+            {{with .availability}}
+              dt Availability
+              dd {{.}}
+            {{end}}
     {{end}}
 
     {{with .profiles}}
