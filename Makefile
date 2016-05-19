@@ -21,14 +21,13 @@ webpack:
 clean:
 	git clean -fdx public/
 
-
 .PHONY: deploy-deps
 deploy-deps:
 	command -v aws > /dev/null 2>&1 || pip install awscli
 	aws configure set preview.cloudfront true
 
 ./public/index.html:
-	$(MAKE) hugo webpack
+	make hugo webpack
 
 .PHONY: ensure-build
 ensure-build: ./public/index.html

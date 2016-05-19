@@ -7,4 +7,5 @@ docker_env="$(docker-machine env $DOCKER_MACHINE_NAME | grep -vE '^#' | tr "\n" 
 tmux split-window -h bash -c "${docker_env}; ./script/webpack-watch"
 tmux split-window -t '.1' bash -c "${docker_env}; sleep 2; ./script/hugo-watch"
 
+sleep 4 # wait for hugo to complete
 ./script/dev-open
