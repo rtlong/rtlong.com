@@ -1,16 +1,26 @@
+{{ $webpackAssets := getJSON "tmp/webpack-assets.json" }}
 = doctype html
 html lang=en
   head
     meta charset=utf-8
     meta http-equiv="X-UA-Compatible" content="IE=edge"
     meta name="description" content="{{with .Description}}{{.}}{{else}}{{.Site.Params.siteDescription}}{{end}}"
+    meta name="viewport" content="width=device-width, initial-scale=1"
+
     {{range .Site.Author}}
       meta name="author" content="{{.}}"
     {{end}}
+
     {{.Hugo.Generator}}
+
     title {{.Title}} - {{.Site.Title}}
-    link rel=stylesheet href="/bundle-main.css"
+
+
     meta name=viewport content="width=device-width user-scalable=no"
+
+    link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"
+    link rel="stylesheet" href="/{{$webpackAssets.main.css}}"
+
   body
     header#header
       = yield header
@@ -28,4 +38,6 @@ html lang=en
       .container-fluid
         = yield footer
 
-    script src="/bundle.js" charset="utf-8"
+    script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"
+    script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"
+    script src="/{{$webpackAssets.main.js}}" charset="utf-8"

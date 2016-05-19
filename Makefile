@@ -2,27 +2,25 @@
 build: clean hugo webpack
 
 .PHONY: dev
-dev: deps clean forego
+dev: clean
+	./script/dev-mode
+
+.PHONY: dev-open
+dev-open:
+	./script/dev-open
 
 .PHONY: hugo
 hugo:
-	hugo
+	docker-compose run --rm hugo hugo
 
 .PHONY: webpack
-webpack: deps
-	node_modules/.bin/webpack
+webpack:
+	docker-compose run --rm webpack webpack
 
 .PHONY: clean
 clean:
-	rm -rf public/*
+	git clean -fdx public/
 
-.PHONY: forego
-forego:
-	forego start
-
-.PHONY: deps
-deps:
-	npm install
 
 .PHONY: deploy-deps
 deploy-deps:

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -euo pipefail
+
+docker-compose up -d nginx
+
+ip=$(docker-machine ip $DOCKER_MACHINE_NAME)
+port=$(docker-compose port nginx 80)
+open "http://${port/0.0.0.0/${ip}}/"

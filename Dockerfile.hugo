@@ -1,0 +1,12 @@
+FROM golang:1.5.4
+
+RUN go get -v github.com/spf13/hugo
+
+RUN apt-get update \
+ && apt-get install -y python-pip
+
+RUN pip install pygments
+
+WORKDIR /app
+
+CMD ["hugo"]

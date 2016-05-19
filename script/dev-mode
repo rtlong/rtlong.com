@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -euo pipefail
+
+docker_env="$(docker-machine env $DOCKER_MACHINE_NAME | grep -vE '^#' | tr "\n" ' ')"
+
+tmux split-window -h bash -c "${docker_env}; ./script/webpack-watch"
+tmux split-window -t '.1' bash -c "${docker_env}; sleep 2; ./script/hugo-watch"
+
+./script/dev-open

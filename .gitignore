@@ -1,3 +1,4 @@
 /node_modules/
 /public/
 .envrc
+webpack-assets.json
