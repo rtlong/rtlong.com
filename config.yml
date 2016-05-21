@@ -15,15 +15,15 @@ author:
 
 params:
   name: Ryan Long
-  siteDescription: Software Engineer in San Francisco
+  siteDescription: Software Engineer. Digital Nomad.
   email: hello@rtlong.com
-  # bio: Software Engineer in San Francisco
+  bio: Software Engineer. Digital Nomad.
   avatarURL: https://gravatar.com/avatar/053e38be1bd8b18bf8b1c26e11a797ff?s=256
 
   header:
     title: Ryan Long
     logoImageURL: signature.svg
-    shortBio: "Software&nbsp;Engineer in&nbsp;San&nbsp;Francisco"
+    shortBio: "Software Engineer. Digital Nomad."
 
 # taxonomies: {}
 # permalinks: {}
