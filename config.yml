@@ -6,6 +6,8 @@ metaDataFormat: "yaml"
 verbose: true # verbose output
 verboseLog: true # verbose logging
 uglyURLs: true
+buildDrafts: true
+buildFuture: true
 
 title: RTLong
 author:
