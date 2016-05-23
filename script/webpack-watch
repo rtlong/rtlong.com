@@ -9,7 +9,7 @@ trap 'exit 1' SIGINT
 printf '\033]2;%s\033\\' "webpack-watch"
 
 # run immediately
-make webpack
+make webpack || :
 
 # then wait until any of these files/dirs has a change
 fswatch -1 styles javascripts

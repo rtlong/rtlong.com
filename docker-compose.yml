@@ -8,6 +8,7 @@ services:
     command: webpack
     volumes:
       - '.:/app'
+
   hugo:
     build:
       context: .
@@ -15,9 +16,16 @@ services:
     volumes:
       - '.:/app'
 
-  nginx:
-    image: nginx
-    volumes:
-      - './public:/usr/share/nginx/html:ro'
-    ports:
-      - 80
+  # nginx:
+  #   image: nginx
+  #   volumes:
+  #     - './public:/usr/share/nginx/html:ro'
+  #   ports:
+  #     - 80
+
+  # http-server:
+  #   image: rtlong/http-local-server
+  #   volumes:
+  #     - './public:/http:ro'
+  #   ports:
+  #     - 32459:80

@@ -2,8 +2,10 @@
 
 set -euo pipefail
 
-docker-compose up -d nginx
+# docker-compose up -d http-server
 
-ip=$(docker-machine ip $DOCKER_MACHINE_NAME)
-port=$(docker-compose port nginx 80)
-open "http://${port/0.0.0.0/${ip}}/"
+# ip=$(docker-machine ip $DOCKER_MACHINE_NAME)
+# port=$(docker-compose port http-server 80)
+# open "http://${port/0.0.0.0/${ip}}/"
+
+open "http://localhost:8080"

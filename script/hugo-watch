@@ -8,8 +8,22 @@ trap 'exit 1' SIGINT
 
 printf '\033]2;%s\033\\' "hugo-watch"
 
+msg() {
+	echo $1
+}
+
+if command -v terminal-notifier >/dev/null 2>&1 && command -v reattach-to-user-namespace >/dev/null 2>&1; then
+		echo 'msg() redefined with terminal-notifier'
+		msg() {
+			local message="$1"; shift
+
+			echo "$message"
+			reattach-to-user-namespace terminal-notifier -title 'rtlong.com' -message "${message}"
+		}
+fi
+
 # run immediately
-make hugo
+make hugo || msg 'build failed' && msg 'build succeeded'
 
 # then wait until any of these files/dirs has a change
 fswatch -1 content layouts config.yml tmp/webpack-assets.json static data
