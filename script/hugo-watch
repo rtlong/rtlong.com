@@ -23,10 +23,10 @@ if command -v terminal-notifier >/dev/null 2>&1 && command -v reattach-to-user-n
 fi
 
 # run immediately
-make hugo || msg 'build failed' && msg 'build succeeded'
+make hugo && msg 'build succeeded' || msg 'build failed'
 
 # then wait until any of these files/dirs has a change
-fswatch -1 content layouts config.yml tmp/webpack-assets.json static data
+fswatch -1 content/ layouts/ config.yml tmp/ static/ data/ themes/ script/hugo-watch
 
 # and run itself over again
 exec $0 "$@"
