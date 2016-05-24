@@ -1,3 +1,12 @@
+= content header
+  a href="/"
+    / svg#logo viewBox="0 0 1000 510" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none" title="Ryan Long" alt="Ryan Long"
+    /   {{ partial .Site.Params.header.logoImageURL }}
+    img#logo src="/signature.png"
+
+    div.name.sr-only {{.Site.Params.header.title}}
+    div.subname {{.Site.Params.header.shortBio | safeHTML}}
+
 = content main
   .row.text-center
     .col-sm-12

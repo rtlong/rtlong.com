@@ -9,7 +9,8 @@ uglyURLs: true
 buildDrafts: true
 buildFuture: true
 
-theme: rtlong
+# theme: rtlong
+theme: future-imperfect
 
 title: RTLong
 author:

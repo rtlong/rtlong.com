@@ -1,0 +1,65 @@
+---
+date: 2016-02-09T22:57:48-08:00
+draft: true
+title: two tee frough tea
+---
+
+hello!
+
+banana_phone_ doo-bee-doo
+
+``` ruby
+foo = Bar.new('FD', "fdo #{@foon} #@doo", :doo) => BARS
+```
+Figure: a chunk of ruby
+
+<!--more-->
+
+http://foo.baro
+
+she's ~~pregnant~~ getting a divorce \\
+foo
+
+{prefix="S"}
+<{{config.yml}}
+Figure: foo
+
+*[HTML]: Hyper Text Markup Language
+
+	Blah HTML balch
+
+Blah HTML balch
+
+> You're my best friend &mdash; I just need your support!
+Quote: http://himym.com -- Lily Aldrin
+
+Name    | Age
+--------|-----:
+Bob     | 27
+Alice   | 23
+Table: table caption
+
+A> This is an aside
+
+1. foo
+1. bar
+1. baz
+
+---
+
+a.  ds
+a.  ds
+
+{callout="yes"}
+``` ruby
+foo
+bar :bar
+
+desc 'Check if you have all dev depdendencies'
+primary_task :assert_deps do |task|
+  opts = []
+  opts << '-q' unless task_run_exclusively(task)
+  run! root_path.join('devtools/bin/assert_deps').to_s, *opts # <1>
+end
+```
+As you can see in <1>, there is blah.
