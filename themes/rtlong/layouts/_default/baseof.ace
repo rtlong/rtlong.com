@@ -13,8 +13,7 @@ html lang=en
 
     {{.Hugo.Generator}}
 
-    title {{.Title}} - {{.Site.Title}}
-
+    title {{.Title}}{{if eq .Title .Site.Title}}{{else}} - {{.Site.Title}}{{end}}
 
     meta name=viewport content="width=device-width user-scalable=no"
 
