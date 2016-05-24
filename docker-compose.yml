@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.webpack
     command: webpack
     volumes:
-      - '.:/app'
+      - './themes/rtlong/:/app'
 
   hugo:
     build:

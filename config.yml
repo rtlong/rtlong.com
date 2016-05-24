@@ -9,6 +9,8 @@ uglyURLs: true
 buildDrafts: true
 buildFuture: true
 
+theme: rtlong
+
 title: RTLong
 author:
   main: Ryan Taylor Long

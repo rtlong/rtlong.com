@@ -12,7 +12,7 @@ module.exports = {
     ],
 
     output: {
-        path: path.join(__dirname, 'public', 'assets', '[hash]'),
+        path: path.join(__dirname, 'static', 'assets', '[hash]'),
         publicPath: 'assets/[hash]/',
         filename: '[name].js',
         chunkFilename: '[id].[hash].js'

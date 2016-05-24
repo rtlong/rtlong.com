@@ -1,4 +1,4 @@
-{{ $webpackAssets := getJSON "tmp/webpack-assets.json" }}
+{{ $webpackAssets := getJSON "themes/rtlong/tmp/webpack-assets.json" }}
 = doctype html
 html lang=en
   head

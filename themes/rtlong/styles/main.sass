@@ -116,6 +116,17 @@ footer#footer
     min-height: 12em
     padding: 3em
 
+  article.post
+    header
+      .date
+        color: blue
+      .wc
+        color: green
+      .section
+        color: red
+      .description
+        color: magenta
+
   @media (min-width: 1201px)
     header#header
       background:
@@ -158,3 +169,10 @@ footer#footer
 
   //  #container
   //    margin: 2em
+
+  .layout-source
+    font-size: 0.8em
+    color: #777
+
+    &:before
+      content: "Layout Source File: "

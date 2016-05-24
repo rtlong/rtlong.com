@@ -1,0 +1,15 @@
+---
+# theme.yml
+
+name: rtlong theme for rtlong.com
+license: MIT
+# licenselink: https://github.com/yourname/yourtheme/blob/master/LICENSE.md
+# description:
+homepage: https://github.com/rtlong/rtlong.com/
+# tags: ["", ""]
+# features: ["", ""]
+min_version: 0.14
+
+author:
+  name: Ryan Long
+  homepage: https://rtlong.com

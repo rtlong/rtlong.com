@@ -26,7 +26,7 @@ fi
 make hugo && msg 'build succeeded' || msg 'build failed'
 
 # then wait until any of these files/dirs has a change
-fswatch -1 content/ layouts/ config.yml tmp/ static/ data/ themes/ script/hugo-watch
+fswatch -1 content/ themes/*/{layouts,static,archetypes/theme.*} config.yml static/ data/ script/hugo-watch
 
 # and run itself over again
 exec $0 "$@"
