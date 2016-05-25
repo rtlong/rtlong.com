@@ -35,11 +35,37 @@ html lang=en
     #container.wrapper.container-fluid
       = yield main
 
+      div id="instafeed"
+
     footer#footer
       .container-fluid
+        nav.menu
+          {{ $currentNode := . }}
+          {{ range .Site.Menus.main }}
+          a.sidebar-nav-item class="{if or ($currentNode.IsMenuCurrent "main" .) ($currentNode.HasMenuCurrent "main" .) }} active {{end}}" href="{{.URL}}"
+            {{ .Name }}
+        {{ end }}
         = yield footer
 
     script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"
     script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"
     script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"
     script src="/{{$webpackAssets.main.js}}" charset="utf-8"
+    / script src="/instafeed.min.js" charset="utf-8"
+    / = javascript
+    /   var feed = new Instafeed({
+    /     get: 'user',
+    /     userId: '{{.Site.Params.instagram.userId}}',
+    /     clientId: '{{.Site.Params.instagram.clientId}}',
+    /     accessToken: '{{.Site.Params.instagram.accessToken}}',
+    /     sortBy: 'most-recent',
+    /     resolution: 'standard_resolution',
+    /   });
+    /   feed.run();
+
+    / {{ $instagram := getJSON "https://api.instagram.com/v1/users/self/media/recent/?access_token=" .Site.Params.instagram.accessToken }}
+
+    / ul#instagram
+    /   {{range $instagram.data}}
+    /   li {{.link}}
+    /   {{end}}

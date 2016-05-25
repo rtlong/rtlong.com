@@ -13,6 +13,7 @@ buildFuture: true
 theme: future-imperfect
 
 title: RTLong
+
 author:
   main: Ryan Taylor Long
 
@@ -27,6 +28,15 @@ params:
     title: Ryan Long
     logoImageURL: signature.svg
     shortBio: "Software Engineer. Digital Nomad."
+
+  instagram:
+    clientId: 7f680a7143eb47d7b7af71ddf5231e03
+    accessToken: 417765262.7f680a7.4843caf7cc83481b89c5da6de97040e5 # only granted access to the above application and only very basic permissions -- no risk in having it here
+    userId: 417765262
+
+SectionPagesMenu: main
+
+preserveTaxonomyNames: true
 
 # taxonomies: {}
 # permalinks: {}

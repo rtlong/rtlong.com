@@ -1,0 +1,4 @@
+{{ $url := .Get 0 }}
+{{ $embed := getJSON "https://api.instagram.com/oembed?url=" $url }}
+
+{{ $embed.html | safeHTML }}
