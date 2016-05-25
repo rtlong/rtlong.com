@@ -3,4 +3,4 @@
 	url = https://github.com/rtlong/resume.git
 [submodule "themes/future-imperfect"]
 	path = themes/future-imperfect
-	url = https://github.com/jpescador/hugo-future-imperfect.git
+	url = https://github.com/rtlong/hugo-theme-future-imperfect.git
