@@ -1,5 +1,5 @@
 .PHONY: build
-build: clean hugo webpack
+build: clean phenomic-build
 
 .PHONY: dev
 dev: clean
@@ -9,13 +9,9 @@ dev: clean
 dev-open:
 	./script/dev-open
 
-.PHONY: hugo
-hugo:
-	docker-compose run --rm hugo hugo
-
-.PHONY: webpack
-webpack:
-	docker-compose run --rm webpack webpack
+.PHONY: phenomic-build
+phenomic-build:
+	docker-compose run --rm phenomic build
 
 .PHONY: clean
 clean:
@@ -27,7 +23,7 @@ deploy-deps:
 	aws configure set preview.cloudfront true
 
 ./public/index.html:
-	make hugo webpack
+	make phenomic-build
 
 .PHONY: ensure-build
 ensure-build: ./public/index.html
