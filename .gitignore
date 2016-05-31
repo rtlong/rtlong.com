@@ -1,2 +1,7 @@
-/public/
-.envrc
+# node / npm
+node_modules
+*.log
+
+# phenomic build
+dist
+*.bundle.js

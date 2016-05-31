@@ -1,0 +1,9 @@
+---
+title: Hello World!
+date: 2016-02-06
+layout: Post
+---
+
+Hello there. Here is another dumb post.
+
+Here is some new content which should appear.

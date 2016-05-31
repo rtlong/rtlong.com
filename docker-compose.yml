@@ -1,31 +1,10 @@
 ---
 version: '2'
 services:
-  webpack:
-    build:
-      context: .
-      dockerfile: Dockerfile.webpack
-    command: webpack
-    volumes:
-      - './themes/rtlong/:/app'
-
-  hugo:
-    build:
-      context: .
-      dockerfile: Dockerfile.hugo
+  phenomic:
+    build: .
+    command: npm start
     volumes:
       - '.:/app'
-
-  # nginx:
-  #   image: nginx
-  #   volumes:
-  #     - './public:/usr/share/nginx/html:ro'
-  #   ports:
-  #     - 80
-
-  # http-server:
-  #   image: rtlong/http-local-server
-  #   volumes:
-  #     - './public:/http:ro'
-  #   ports:
-  #     - 32459:80
+    ports:
+      - 3000
