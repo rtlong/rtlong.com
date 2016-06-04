@@ -3,17 +3,16 @@ import React, { Component, PropTypes } from "react"
 const definitionListItem = ({ term, values }) => {
   values = values.filter(e => !!e)
 
-  if (values.length == 0) {
-    return null
-  }
-  else {
-    return [
-      <dt>{ term }</dt>,
-      ...values.map(v => (
+  // if (values.length == 0) {
+  //   return null
+  // }
+
+  return [
+    <dt>{ term }</dt>,
+    ...values.map(v => (
         <dd>{ v }</dd>
-      )),
-    ]
-  }
+    )),
+  ]
 }
 
 class DefinitionList extends Component {

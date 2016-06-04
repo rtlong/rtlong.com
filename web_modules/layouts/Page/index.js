@@ -49,10 +49,7 @@ class Page extends Component {
           meta={ meta }
         />
 
-        {
-          head.title &&
-                <h1>{ head.title }</h1>
-        }
+        <h1>{ head.title }</h1>
         { header }
         <BodyContainer>{ body }</BodyContainer>
         { props.children }

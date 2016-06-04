@@ -16,7 +16,7 @@
   "phenomic": {
     "CNAME": false,
     "nojekyll": false,
-    "verbose": true
+    "verbose": false
   },
   "babel": {
     "presets": [
@@ -39,9 +39,12 @@
     ],
     "rules": {
       "react/prefer-stateless-function": 0,
-      "react/no-multi-comp": 1,
       "react/jsx-key": 0,
-      "max-len": 0
+      "react/no-multi-comp": 0,
+      "max-len": 0,
+      "no-unused-vars": 1,
+      "array-bracket-spacing": 1,
+      "quotes": 1
     }
   },
   "eslintConfigRuleReact/prefer-stateless-function": "https://github.com/MoOx/phenomic/issues/46",
@@ -75,6 +78,7 @@
     "postcss-cssnext": "^2.4.0",
     "postcss-loader": "^0.7.0",
     "postcss-reporter": "^1.3.0",
+    "ramda": "^0.21.0",
     "raw-loader": "^0.5.1",
     "react": "^0.14.0 || ^15.0.0-rc.1",
     "react-dom": "^0.14.0 || ^15.0.0-rc.1",
