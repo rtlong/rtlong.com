@@ -1,9 +1,8 @@
 ---
-title: Résumé
-description: The Résumé of Ryan Taylor Long
-resume_version: standard
-weight: 1
-#date: 2015-08-16
+title: Resume
+layout: Resume
+description: The Resume of Ryan Taylor Long
+@@include(../../data/resume/standard.yml)
 ---
 
-This content isn't used. Look at `layouts/resume/resume.ace`
+This content defined in content/resume/standard.md -- should not be visble in Resume layout, as all content comes from content/resume/standard.yml.

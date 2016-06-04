@@ -5,6 +5,7 @@ import ExtractTextPlugin from "extract-text-webpack-plugin"
 
 import pkg from "./package.json"
 
+
 // note that this webpack file is exporting a "makeConfig" function
 // which is used for phenomic to build dynamic configuration based on your needs
 // see the end of the file if you want to export a default config
@@ -20,7 +21,10 @@ export const makeConfig = (config = {}) => {
         {
           // phenomic requirement
           test: /\.md$/,
-          loader: "phenomic/lib/content-loader",
+          loaders: [
+            "phenomic/lib/content-loader",
+            "front-matter-preprocessor-loader.babel",
+          ],
           // config is in phenomic.contentLoader section below
           // so you can use functions (and not just JSON) due to a restriction
           // of webpack that serialize/deserialize loader `query` option.
@@ -30,6 +34,13 @@ export const makeConfig = (config = {}) => {
           loader: "json-loader",
         },
         {
+          test: /\.yml$/,
+            loaders: [
+              "json-loader",
+              "yaml-loader",
+            ],
+        },
+        {
           test: /\.js$/,
           loaders: [
             `babel-loader?cacheDirectory=${process.env.TMPDIR}${
@@ -37,7 +48,7 @@ export const makeConfig = (config = {}) => {
               ? "&presets[]=babel-preset-react-hmre"
               : ""
             }`,
-            "eslint-loader?fix",
+            "eslint-loader",
           ],
           include: [
             path.resolve(__dirname, "scripts"),
@@ -121,7 +132,12 @@ export const makeConfig = (config = {}) => {
       extensions: [ ".js", ".json", "" ],
       root: [ path.join(__dirname, "node_modules") ],
     },
-    resolveLoader: { root: [ path.join(__dirname, "node_modules") ] },
+    resolveLoader: {
+      root: [
+        path.join(__dirname, "lib/loaders"),
+        path.join(__dirname, "node_modules")
+      ],
+    },
   }
 }
 

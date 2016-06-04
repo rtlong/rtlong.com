@@ -5,7 +5,7 @@
   "twitter": "rtlong",
   "repository": "https://github.com/rtlong/rtlong.com",
   "scripts": {
-    "lint:js": "eslint --ignore-path .gitignore --fix .",
+    "lint:js": "eslint --ignore-path .gitignore .",
     "lint:css": "stylelint \"web_modules/**/*.css\"",
     "lint": "npm-run-all --parallel lint:*",
     "start": "phenomic start",
@@ -15,7 +15,8 @@
   },
   "phenomic": {
     "CNAME": false,
-    "nojekyll": false
+    "nojekyll": false,
+    "verbose": true
   },
   "babel": {
     "presets": [
@@ -37,7 +38,10 @@
       "eslint-config-i-am-meticulous/react"
     ],
     "rules": {
-      "react/prefer-stateless-function": 0
+      "react/prefer-stateless-function": 0,
+      "react/no-multi-comp": 1,
+      "react/jsx-key": 0,
+      "max-len": 0
     }
   },
   "eslintConfigRuleReact/prefer-stateless-function": "https://github.com/MoOx/phenomic/issues/46",
@@ -64,6 +68,7 @@
     "history": "^2.0.0",
     "invariant": "^2.1.1",
     "json-loader": "^0.5.2",
+    "layout-loader": "^1.0.3",
     "npm-run-all": "^1.7.0",
     "phenomic": "^0.12.4",
     "postcss-browser-reporter": "^0.4.0",
@@ -83,6 +88,7 @@
     "stylelint": "^6.0.0",
     "stylelint-config-standard": "^7.0.0",
     "webpack": "^1.12.1",
-    "whatwg-fetch": "^0.11.0"
+    "whatwg-fetch": "^0.11.0",
+    "yaml-loader": "^0.2.0"
   }
 }

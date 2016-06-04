@@ -16,6 +16,7 @@ phenomicClient({
 // md files → JSON && generate collection + hot loading for dev
 let mdContext = require.context("../content", true, /\.md$/)
 mdContext.keys().forEach(mdContext)
+
 if (module.hot) {
   const mdHotUpdater = require("phenomic/lib/client/hot-md").default
   module.hot.accept(mdContext.id, () => {
