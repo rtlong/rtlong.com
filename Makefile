@@ -1,6 +1,8 @@
 .PHONY: build
 build: phenomic-build
 
+clean:
+	git clean -fdx -- dist/
 # .PHONY: dev
 # dev: clean
 # 	./script/dev-mode
