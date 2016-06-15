@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react"
 import Helmet from "react-helmet"
 import invariant from "invariant"
-import { BodyContainer, joinUri } from "phenomic"
+import { joinUri } from "phenomic"
 
 class Page extends Component {
   render() {
@@ -15,7 +15,7 @@ class Page extends Component {
       __filename,
       __url,
       head,
-      body,
+      children,
       header,
       footer,
     } = props
@@ -25,7 +25,10 @@ class Page extends Component {
       `Your page '${ __filename }' needs a title`
     )
 
-    const metaTitle = head.metaTitle ? head.metaTitle : head.title
+    let metaTitle = head.metaTitle ? head.metaTitle : head.title
+    if (!(/\bRTLong$/).test(metaTitle)) {
+      metaTitle = metaTitle + " - RTLong"
+    }
 
     const meta = [
       { property: "og:type", content: "article" },
@@ -42,6 +45,12 @@ class Page extends Component {
       { name: "description", content: head.description },
     ]
 
+    const defaultHeader = (
+        <header>
+        <h1>{ head.title }</h1>
+        </header>
+    )
+
     return (
       <div>
         <Helmet
@@ -49,10 +58,8 @@ class Page extends Component {
           meta={ meta }
         />
 
-        <h1>{ head.title }</h1>
-        { header }
-        <BodyContainer>{ body }</BodyContainer>
-        { props.children }
+        { typeof header == "undefined" ? defaultHeader : header }
+        { children }
         { footer }
       </div>
     )
@@ -64,7 +71,6 @@ Page.propTypes = {
   __filename: PropTypes.string.isRequired,
   __url: PropTypes.string.isRequired,
   head: PropTypes.object.isRequired,
-  body: PropTypes.string.isRequired,
   header: PropTypes.element,
   footer: PropTypes.element,
 }

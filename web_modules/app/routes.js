@@ -4,12 +4,7 @@ import { Route } from "react-router"
 import LayoutContainer from "../LayoutContainer"
 import PhenomicPageContainer from "phenomic/lib/PageContainer"
 
-import Page from "../layouts/Page"
-import PageError from "../layouts/PageError"
-import PageLoading from "../layouts/PageLoading"
-import Homepage from "../layouts/Homepage"
-import Post from "../layouts/Post"
-import Resume from "../layouts/Resume"
+import layouts from "../layouts"
 
 class PageContainer extends Component {
   render() {
@@ -17,14 +12,8 @@ class PageContainer extends Component {
     return (
       <PhenomicPageContainer
         { ...props }
-        layouts={ {
-          Page,
-          PageError,
-          PageLoading,
-          Homepage,
-          Post,
-          Resume,
-        } }
+        defaultLayout={ 'SimplePage' }
+        layouts={ layouts }
       />
     )
   }

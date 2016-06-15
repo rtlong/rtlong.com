@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react"
 import styles from "./index.css"
 
-export default class PageError extends Component {
+export default class ErrorPage extends Component {
 
   static propTypes = {
     error: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
