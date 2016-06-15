@@ -43,14 +43,13 @@
       "react/no-multi-comp": 0,
       "max-len": 0,
       "no-unused-vars": 1,
+      "no-var": 1,
+      "prefer-const": 1,
       "array-bracket-spacing": 1,
       "quotes": 1
     }
   },
   "eslintConfigRuleReact/prefer-stateless-function": "https://github.com/MoOx/phenomic/issues/46",
-  "stylelint": {
-    "extends": "stylelint-config-standard"
-  },
   "devDependencies": {
     "babel-cli": "^6.3.17",
     "babel-core": "^6.3.26",
