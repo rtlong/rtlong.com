@@ -5,35 +5,48 @@ import Header from "../Header"
 import Footer from "../Footer"
 
 import styles from "./index.css"
+import "../assets/global.css"
+import "!style!css?modules=false!highlight.js/styles/hybrid.css"
 
 export default class Layout extends Component {
 
   static propTypes = {
     children: PropTypes.oneOfType([ PropTypes.array, PropTypes.object ]),
-  };
+  }
 
   static contextTypes = {
     metadata: PropTypes.object.isRequired,
-  };
+  }
 
   render() {
     const {
       pkg,
     } = this.context.metadata
 
+    const meta = [
+      {
+        name: "generator",
+        content: `${ process.env.PHENOMIC_NAME } ${ process.env.PHENOMIC_VERSION }`,
+      },
+      {
+        property: "og:site_name",
+        content: pkg.name,
+      },
+      {
+        name: "twitter:site",
+        content: `@${ pkg.twitter }`,
+      },
+    ]
+
     return (
       <div className={ styles.layout }>
         <Helmet
-          meta={ [
-            {
-              name: "generator", content: `${
-              process.env.PHENOMIC_NAME } ${ process.env.PHENOMIC_VERSION }`,
-            },
-            { property: "og:site_name", content: pkg.name },
-            { name: "twitter:site", content: `@${ pkg.twitter }` },
-          ] }
+          meta={ meta }
           script={ [
             { src: "https://cdn.polyfill.io/v2/polyfill.min.js" },
+          ] }
+          link={ [
+            { rel: "stylesheet", href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" },
           ] }
         />
         <Header />

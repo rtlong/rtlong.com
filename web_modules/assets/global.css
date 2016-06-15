@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+
+  font-size: 1rem;
+  line-height: 1.5rem;
+
+  /* system font https://medium.com/designing-medium/system-shock-6b1dc6d6596f */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+a {
+  color: #092c7a;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 200;
+}
+
+blockquote {
+  opacity: 0.7;
+  margin: 2rem 0;
+  padding-left: 1rem;
+  border-left: 1px solid black;
+}
+
+:global .fa {
+  display: none;
+}
