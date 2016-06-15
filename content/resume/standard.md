@@ -1,7 +1,7 @@
 ---
-title: Resume
 layout: Resume
 description: The Resume of Ryan Taylor Long
+date: 2016-06-06
 @@include(../../data/resume/standard.yml)
 ---
 

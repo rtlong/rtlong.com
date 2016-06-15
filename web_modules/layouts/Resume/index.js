@@ -1,23 +1,37 @@
 import R from "ramda"
 import React, { Component, PropTypes } from "react"
 import Markdown from "react-markdown"
+import invariant from "invariant"
 
 import Page from "../Page"
 import DefinitionList from "../../components/definition-list"
 
 import css from "./index.css"
 
-// function ith(obj, fn) {
-//   if (!obj) {
-//     return null
-//   }
-//   return fn.call(this, obj)
-// }
+const cssClass = (className) => {
+  const value = css[className]
+  invariant(value, `CSS Class .${className} not defined!`)
+  return value
+}
 
 const compact = R.filter(x => x)
+// const pp = R.tap(x => console.log(x))
 
-function wrapWithComponent(componentName) {
-  return (children) => React.createElement(componentName, {}, children)
+const wrapWithComponent = (componentName) => (children) => React.createElement(componentName, {}, children)
+
+const Location = R.compose(
+  wrapWithComponent("address"),
+  R.join(", "),
+  compact,
+  R.props([ "description", "city", "region", "countryCode" ]),
+  R.prop("location"),
+)
+
+Location.propTypes = {
+  description: PropTypes.string,
+  city: PropTypes.string,
+  region: PropTypes.string,
+  countryCode: PropTypes.string,
 }
 
 const ResumeSection = ({ className, title, children }) => (
@@ -31,13 +45,36 @@ const ResumeSection = ({ className, title, children }) => (
 ResumeSection.propTypes = {
   title: PropTypes.string.isRequired,
   className: PropTypes.string.isRequired,
-  children: PropTypes.oneOfType([ PropTypes.array, PropTypes.object ]).isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
+  ]).isRequired,
+}
+
+const ResumeCollectionSection = ({ className, title, itemElement, collection }) => (
+  <ResumeSection className={ className } title={ title }>
+    { collection.map((item, index) => (
+      React.createElement(itemElement, { key: index, ...item })
+    )) }
+  </ResumeSection>
+)
+
+ResumeCollectionSection.propTypes = {
+  title: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+  itemElement: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+    PropTypes.func, // FIXM: how can I better validate that it's a 'Stateless Functional Component' function?
+  ]).isRequired,
+  collection: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 const ResumeHeader = ({ name, label }) => (
-  <ResumeSection className={ css.name } title={ name }>
-    <h3>{ label }</h3>
-  </ResumeSection>
+  <header className={ cssClass("header") }>
+    <h1>{ name }</h1>
+    <h2>{ label }</h2>
+  </header>
 )
 
 ResumeHeader.propTypes = {
@@ -55,17 +92,17 @@ const ResumeContact = ({ email, phone, website, location }) => {
   }
   if (website) {
     dataSet.push({ term: "Website", values: [
-      <a href={ website }>{ website }</a>,
+      (<a href={ website }>{ website }</a>),
     ] })
   }
   if (location) {
     dataSet.push({ term: "Location", values: [
-      R.compose(wrapWithComponent("address"), R.join(", "), compact, R.props([ "city", "region", "countryCode" ])),
+      (<Location location={ location } />),
     ] })
   }
 
   return (
-    <ResumeSection className={ css.contact } title={ "Contact" }>
+    <ResumeSection className={ cssClass("contact") } title={ "Contact" }>
       <DefinitionList data={ dataSet } />
     </ResumeSection>
   )
@@ -83,13 +120,13 @@ const ResumeProfiles = ({ profiles }) => {
     return {
       term: profile.network,
       values: [
-        <a href={ profile.url }>{ profile.url }</a>,
+        (<a href={ profile.url }>{ profile.url }</a>),
       ],
     }
   })
 
   return (
-    <ResumeSection className={ css.profiles } title={ "Profiles" }>
+    <ResumeSection className={ cssClass("profiles") } title={ "Profiles" }>
       <DefinitionList data={ dataSet } />
     </ResumeSection>
   )
@@ -100,16 +137,14 @@ ResumeProfiles.propTypes = {
 }
 
 const ResumeAbout = ({ summary, picture, availability }) => (
-  <ResumeSection className={ css.about } title={ "About" }>
+  <ResumeSection className={ cssClass("about") } title={ "About" }>
     { picture &&
-      <img src={ picture } alt={ "my portrait" } /> }
+    <img src={ picture } alt={ "my portrait" } /> }
 
-    <p className={ "summary" }>
-      <Markdown source={ summary } />
-    </p>
+    <Markdown className={ "summary" } source={ summary } />
 
     { availability &&
-      <DefinitionList data={ [ { term: "Availability", values: [ availability ] } ] } /> }
+    <DefinitionList data={ [ { term: "Availability", values: [ availability ] } ] } /> }
   </ResumeSection>
 )
 
@@ -119,52 +154,40 @@ ResumeAbout.propTypes = {
   availability: PropTypes.string,
 }
 
-const ResumeWorkExperience = ({ work }) => (
-  <ResumeSection className={ css.work } title={ "Work" }>
-  { work.map((workItem, i) =>
-    <ResumeWorkExperienceItem key={ i } {...workItem} />
-  ) }
-  </ResumeSection>
-)
-
-ResumeWorkExperience.propTypes = {
-  work: PropTypes.arrayOf(PropTypes.object).isRequired,
-}
-
-const ResumeWorkExperienceItem = ({ company, startDate, endDate, location, position, summary, highlights, technologies }) => (
+const ResumeWorkExperience = ({ company, startDate, endDate, location, position, summary, highlights, technologies }) => (
   <div>
     <header>
       <h4>{ company }</h4>
       <div className={ "date-location" }>
         <div className={ "date" }>{ [ startDate, endDate || "present" ].join(" – ") }</div>
         { location &&
-          <div className={ "location" }>{ location }</div> }
+        <div className={ "location" }>{ location }</div> }
       </div>
       { position &&
-        <div className={ "position" }>{ position }</div> }
+      <div className={ "position" }>{ position }</div> }
     </header>
 
     { summary &&
-      <div className={ "summary" }>
-        <Markdown source={ summary } />
-      </div> }
+      <Markdown className={ "summary" } source={ summary } /> }
 
-    { highlights &&
-      <div className={ "highlights" }>
-        <h5>{ "Highlights" }</h5>
-        <Markdown source={ highlights } />
-      </div> }
+      { highlights &&
+        <div className={ "highlights" }>
+            <h5>{ "Highlights" }</h5>
+            <Markdown source={ highlights } />
+        </div> }
 
-    { technologies &&
-      <div className={ "technologies" }>
-        <h5>{ "Technologies Used" }</h5>
-        <ul>{ technologies.map(wrapWithComponent("li")) }</ul>
-      </div> }
+        { technologies &&
+          <div className={ cssClass("technologies") }>
+              <h5>{ "Technologies Used" }</h5>
+                <ul>{ technologies.map((t, i) => (
+                  <li key={ i }>{ t }</li>
+                )) }</ul>
+          </div> }
     <hr />
-  </div>
+    </div>
 )
 
-ResumeWorkExperienceItem.propTypes = {
+ResumeWorkExperience.propTypes = {
   company: PropTypes.string.isRequired,
   startDate: PropTypes.string.isRequired,
   endDate: PropTypes.string,
@@ -175,23 +198,86 @@ ResumeWorkExperienceItem.propTypes = {
   technologies: PropTypes.arrayOf(PropTypes.string),
 }
 
-const ResumeTestimonialsSection = ({ testimonials }) => (
-  <ResumeSection className={ css.testimonials } title={ "References" }>
-  { testimonials.map((testimonial, i) =>
-    <ResumeTestimonial key={ i } {...testimonial} />
-  ) }
-  </ResumeSection>
+const ResumeVolunteerExperience = ({
+  organization,
+  startDate,
+  endDate,
+  location,
+  // website,
+  position,
+  summary,
+  highlights,
+}) => (
+  <div>
+    <header>
+      <h4>{ organization }</h4>
+      <div className={ "date-location" }>
+        <div className={ "date" }>{ [ startDate, endDate || "present" ].join(" – ") }</div>
+        { location &&
+          <div className={ "location" }>{ location }</div> }
+      </div>
+      { position &&
+        <div className={ "position" }>{ position }</div> }
+    </header>
+
+    { summary &&
+      <Markdown className={ "summary" } source={ summary } /> }
+
+    { highlights &&
+      <div className={ "highlights" }>
+        <h5>{ "Highlights" }</h5>
+        <Markdown source={ highlights } />
+      </div> }
+    <hr />
+  </div>
 )
 
-ResumeTestimonialsSection.propTypes = {
-  testimonials: PropTypes.arrayOf(PropTypes.object).isRequired,
+ResumeVolunteerExperience.propTypes = {
+  organization: PropTypes.string.isRequired,
+  startDate: PropTypes.string.isRequired,
+  endDate: PropTypes.string,
+  location: PropTypes.string,
+  website: PropTypes.string,
+  position: PropTypes.string,
+  summary: PropTypes.string,
+  highlights: PropTypes.string,
+}
+
+const ResumeEducation = ({
+  institution,
+  studyType,
+  startDate,
+  location,
+  endDate,
+}) => (
+  <div>
+    <h4>{ institution }</h4>
+    <div className={ "date-location" }>
+      <div className={ "date" }>{ [ startDate, endDate || "present" ].join(" – ") }</div>
+      { location &&
+      <div className={ "location" }>{ location }</div> }
+    </div>
+    { studyType &&
+      <div className={ "studyType" }>{ studyType }</div> }
+    <hr />
+  </div>
+)
+
+ResumeEducation.propTypes = {
+  institution: PropTypes.string.isRequired,
+  studyType: PropTypes.string.isRequired,
+  startDate: PropTypes.string.isRequired,
+  endDate: PropTypes.string,
+  location: PropTypes.string,
 }
 
 const ResumeTestimonial = ({ name, body }) => (
-  <blockquote className={ "reference" }>
-    <p><Markdown source={ body } /></p>
-    <footer><Markdown source={ name } /></footer>
-  </blockquote>
+  <figure className={ "reference" }>
+    <blockquote>
+      <Markdown source={ body } />
+    </blockquote>
+    <figcaption><Markdown source={ name } /></figcaption>
+  </figure>
 )
 
 ResumeTestimonial.propTypes = {
@@ -208,22 +294,55 @@ class Resume extends Component {
     const { props } = this
     const { head } = props
 
+    if (!head.title) {
+      head.title = head.basics.name
+    }
+    if (!head.metaTitle) {
+      head.metaTitle = "Resume"
+    }
+
+    const header = <ResumeHeader {...head.basics} />
+
     const pageDate = head.date ? new Date(head.date) : null
-    const header = (
-      <header>
-      { pageDate &&
-        <time key={ pageDate.toISOString() }>{ pageDate.toDateString() }</time> }
-      </header>
+    const footer = (
+      <footer>
+        { pageDate &&
+          <div className={ "date" }>
+            { "Last updated: " }
+            <time key={ pageDate.toISOString() }>{ pageDate.toDateString() }</time>
+          </div> }
+      </footer>
     )
 
     return (
-      <Page {...props} body={ "" } header={ header }>
-        <ResumeHeader {...head.basics} />
+      <Page {...props} body={ "" } header={ header } footer={ footer }>
         <ResumeContact {...head.basics} />
         <ResumeAbout {...head.basics} />
         <ResumeProfiles {...head.basics} />
-        <ResumeWorkExperience work={ head.work } />
-        <ResumeTestimonialsSection testimonials={ head.testimonials } />
+        <ResumeCollectionSection
+          className={ cssClass("work") }
+          title={ "Work" }
+          itemElement={ ResumeWorkExperience }
+          collection={ head.work }
+        />
+        <ResumeCollectionSection
+          className={ cssClass("volunteer") }
+          title={ "Volunteer" }
+          itemElement={ ResumeVolunteerExperience }
+          collection={ head.volunteer }
+        />
+        <ResumeCollectionSection
+          className={ cssClass("education") }
+          title={ "Education" }
+          itemElement={ ResumeEducation }
+          collection={ head.education }
+        />
+        <ResumeCollectionSection
+          className={ cssClass("testimonials") }
+          title={ "Testimonials" }
+          itemElement={ ResumeTestimonial }
+          collection={ head.testimonials }
+        />
       </Page>
     )
   }
