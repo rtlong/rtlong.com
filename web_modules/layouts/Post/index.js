@@ -1,11 +1,8 @@
 import React, { Component, PropTypes } from "react"
-
+import { BodyContainer } from "phenomic"
 import Page from "../Page"
 
 class Post extends Component {
-
-  // it's up to you to choose what to do with this layout ;)
-
   render() {
     const { props } = this
     const { head } = props
@@ -14,18 +11,21 @@ class Post extends Component {
 
     return (
       <Page
-        { ...props}
+        { ...props }
         header={
           <header>
-          {
-            pageDate &&
-            <time key={ pageDate.toISOString() }>
-              { pageDate.toDateString() }
-            </time>
-          }
+              <h1>{ head.title }</h1>
+              {
+                pageDate &&
+                  <time key={ pageDate.toISOString() }>
+                      { pageDate.toDateString() }
+                  </time>
+              }
           </header>
         }
-      />
+      >
+        <BodyContainer>{ props.body }</BodyContainer>
+      </Page>
     )
   }
 }
