@@ -3,14 +3,21 @@ module.exports = {
   parser: 'babel-eslint',
   env: {
     browser: true,
-    node: true
+    node: true,
   },
   extends: 'standard',
   // required to lint *.vue files
   plugins: [
-    'html'
+    'html',
   ],
   // add your custom rules here
-  rules: {},
-  globals: {}
+    rules: {
+      'comma-dangle': ['error', 'always-multiline'],
+      'space-before-function-paren': ['error', {
+        anonymous: 'always',
+        asyncArrow: 'ignore',
+        named: 'never',
+      }],
+    },
+  globals: {},
 }

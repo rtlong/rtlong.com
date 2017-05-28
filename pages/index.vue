@@ -2,41 +2,33 @@
   <section class="container">
     <div>
       <logo/>
-      <h1 class="title">
-        NUXT
-      </h1>
-      <h2 class="subtitle">
-        Universal Vue.js Application
-      </h2>
+      <h1 class="title">Ryan Long</h1>
+      <h2 class="subtitle">Ops/Software Engineer</h2>
       <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
-        <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
+        <a href="mailto:ryan@rtlong.com" class="button--green">Email</a>
+        <a href="https://github.com/rtlong" target="_blank" class="button--grey">GitHub</a>
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import Logo from '~components/Logo.vue'
-
-export default {
-  components: {
-    Logo
+  export default {
+    components: {
+      logo: require('~components/logo'),
+    },
   }
-}
 </script>
 
 <style>
-.container
-{
+.container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
-.title
-{
+.title {
   font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
   display: block;
   font-weight: 300;
@@ -44,16 +36,14 @@ export default {
   color: #35495e;
   letter-spacing: 1px;
 }
-.subtitle
-{
+.subtitle {
   font-weight: 300;
   font-size: 42px;
   color: #526488;
   word-spacing: 5px;
   padding-bottom: 15px;
 }
-.links
-{
+.links {
   padding-top: 15px;
 }
 </style>
