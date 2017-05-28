@@ -1,7 +1,7 @@
 <template>
   <section class="container">
     <div>
-      <logo/>
+      <Logo/>
       <h1 class="title">Ryan Long</h1>
       <h2 class="subtitle">Ops/Software Engineer</h2>
       <div class="links">
@@ -13,9 +13,11 @@
 </template>
 
 <script>
+  import Logo from '~components/Logo'
+
   export default {
     components: {
-      logo: require('~components/logo'),
+      Logo,
     },
   }
 </script>
