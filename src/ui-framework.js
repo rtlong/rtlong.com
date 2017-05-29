@@ -1,5 +1,5 @@
-// import Vue from 'vue'
-// import VueMdc from 'vue-mdc'
-// import 'vue-mdc/dist/vue-mdc.css'
+import Vue from 'vue'
+import Buefy from 'buefy'
+import 'buefy/lib/buefy.css'
 
-// Vue.use(VueMdc)
+Vue.use(Buefy)

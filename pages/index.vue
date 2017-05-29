@@ -1,16 +1,18 @@
 <template>
-  <layout-default>
-    <section class="container">
+  <div class="centered">
+    <div class="centered-content">
       <Logo/>
-      <h1 class="title">Ryan Long</h1>
-      <h2 class="subtitle">Ops/Software Engineer</h2>
+      <h1 class="title is-1">Ryan Long</h1>
+      <h2 class="subtitle is-6">Ops/Software Engineer</h2>
       <div class="links">
-        <a href="mailto:ryan@rtlong.com" class="button--green">Email</a>
-        <a href="https://github.com/rtlong" target="_blank" class="button--grey">GitHub</a>
-        <router-link :to="{name: 'blog-index'}">Blog</router-link>
+        <a href="mailto:ryan@rtlong.com" class="button">Email</a>
+        <a href="https://github.com/rtlong" target="_blank" class="button">GitHub</a>
+        <router-link :to="{name: 'blog-index'}" tag="span">
+          <a class="button">Blog</a>
+        </router-link>
       </div>
-    </section>
-  </layout-default>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -23,30 +25,18 @@
   }
 </script>
 
-<style>
-.container {
+<style scoped>
+.centered {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
+.logo {
+  margin-bottom: 3em;
 }
 .links {
-  padding-top: 15px;
+  margin-top: 3em;
 }
 </style>

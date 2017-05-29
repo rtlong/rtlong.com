@@ -148,6 +148,7 @@ class WebpackConfig {
         new BundleAnalyzerPlugin({
           analyzerMode: 'static',
           openAnalyzer: false,
+          logLevel: 'warn',
         }),
       ],
     }

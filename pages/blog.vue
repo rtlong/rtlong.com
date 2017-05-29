@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <h1>Blog.vue (parent page)</h1>
-    <p>What follows is the child page:</p>
-    <div class="child">
+  <layout-default>
+    <section class="section">
+      <h1>Blog.vue (parent page)</h1>
       <router-view />
-    </div>
-  </div>
+    </section>
+  </layout-default>
 </template>
 
 <script>
@@ -14,14 +13,5 @@
   }
 </script>
 
-<!-- <routing> -->
-<!-- { "name": "foo", "path": "/blog" } -->
-<!-- </routing> -->
-
 <style scoped>
-.child {
-  margin: 3em 0;
-  box-shadow: #999 0px 0px 10px 0px;
-  padding: 2em;
-}
 </style>

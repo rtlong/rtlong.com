@@ -1,8 +1,12 @@
 <template>
-  <div>
-    <h1>Application Routes</h1>
-    <RouteTable :routes="routes" />
-  </div>
+  <layout-default>
+    <section class="section">
+      <div class="heading">
+        <h1 class="title is-1">Application Routes</h1>
+      </div>
+      <RouteTable :routes="routes" />
+    </section>
+  </layout-default>
 </template>
 
 <script>
