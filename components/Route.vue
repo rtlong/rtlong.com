@@ -24,11 +24,7 @@
     computed: {
       name: function () { return this.route.name },
       path: function () { return this.route.path },
-      linkPath: function () {
-        return this.parentPath
-          ? this.parentPath + '/' + this.route.path
-          : this.route.path
-      },
+      linkPath: function () { return this.route.path },
       children: function () { return this.route.children || [] },
     },
   }

@@ -10,8 +10,13 @@
 
 <script>
   export default {
+    name: 'BlogParentPage',
   }
 </script>
+
+<!-- <routing> -->
+<!-- { "name": "foo", "path": "/blog" } -->
+<!-- </routing> -->
 
 <style scoped>
 .child {

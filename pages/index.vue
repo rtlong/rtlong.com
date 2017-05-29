@@ -1,15 +1,16 @@
 <template>
-  <section class="container">
-    <div>
+  <layout-default>
+    <section class="container">
       <Logo/>
       <h1 class="title">Ryan Long</h1>
       <h2 class="subtitle">Ops/Software Engineer</h2>
       <div class="links">
         <a href="mailto:ryan@rtlong.com" class="button--green">Email</a>
         <a href="https://github.com/rtlong" target="_blank" class="button--grey">GitHub</a>
+        <router-link :to="{name: 'blog-index'}">Blog</router-link>
       </div>
-    </div>
-  </section>
+    </section>
+  </layout-default>
 </template>
 
 <script>

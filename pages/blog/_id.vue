@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Page: <code>blog/_id.vue({ id: {{id}} })</code></h1>
+    <h1>Page: <code>blog/_id.vue({{ JSON.stringify({ id }) }})</code></h1>
   </div>
 </template>
 
@@ -10,5 +10,8 @@
   }
 </script>
 
-<style scoped>
-</style>
+<routing>
+{
+  "path": "/blog/:id(\\d+)"
+}
+</routing>

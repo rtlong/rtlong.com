@@ -1,5 +1,8 @@
 import path from 'path'
 import webpack from 'webpack'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+
+const routingLoader = require.resolve('./webpack/routing-loader')
 
 class WebpackConfig {
   constructor() {
@@ -36,24 +39,28 @@ class WebpackConfig {
 
   config() {
     let config = {
-      entry: './src/main.js',
+      entry: {
+        build: './src/main.js',
+      },
 
       output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/dist/',
-        filename: 'build.js'
+        filename: this.dev ? '[name].js' : '[name].[chunkHash].js',
       },
 
       resolve: {
         alias: {
+          vue: 'vue/dist/vue.js',
           '~': path.join(this.rootDir),
-          '~static': path.join(this.rootDir, 'static'),
           '~assets': path.join(this.rootDir, 'assets'),
-          '~plugins': path.join(this.rootDir, 'plugins'),
-          '~store': path.join(this.dir, '.nuxt/store'),
-          '~router': path.join(this.dir, '.nuxt/router'),
+          '~components': path.join(this.rootDir, 'components'),
+          '~layouts': path.join(this.rootDir, 'layouts'),
           '~pages': path.join(this.rootDir, 'pages'),
-          '~components': path.join(this.rootDir, 'components')
+          '~plugins': path.join(this.rootDir, 'plugins'),
+          '~router': path.join(this.dir, '.nuxt/router'),
+          '~static': path.join(this.rootDir, 'static'),
+          '~store': path.join(this.dir, '.nuxt/store'),
         }
       },
 
@@ -72,13 +79,9 @@ class WebpackConfig {
             options: {
               postcss: this.options.build.postcss,
               loaders: {
-                'js': 'babel-loader?' + this.babelOptions,
-                'css': this.styleLoader('css'),
-                'less': this.styleLoader('less', 'less-loader'),
-                'sass': this.styleLoader('sass', 'sass-loader?indentedSyntax&?sourceMap'),
-                'scss': this.styleLoader('sass', 'sass-loader?sourceMap'),
-                'stylus': this.styleLoader('stylus', 'stylus-loader'),
-                'styl': this.styleLoader('stylus', 'stylus-loader')
+                js: 'babel-loader?' + this.babelOptions,
+                css: this.styleLoader('css'),
+                routing: [routingLoader],
               },
               preserveWhitespace: false,
               extractCSS: this.extractStyles(),
@@ -125,20 +128,36 @@ class WebpackConfig {
       },
 
       performance: {
-        hints: false
+        hints: this.dev ? false : 'error',
+        maxAssetSize: 500000,
       },
 
-      devtool: '#eval-source-map'
+      devtool: this.dev ? 'cheap-module-source-map' : '#source-map',
+
+      plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+          name: 'vendor',
+          minChunks: function (module) {
+            // this assumes your vendor imports exist in the node_modules directory
+            return module.context && module.context.indexOf('node_modules') !== -1;
+          }
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+          name: 'manifest'
+        }),
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          openAnalyzer: false,
+        }),
+      ],
     }
 
-
-    if (process.env.NODE_ENV === 'production') {
-      config.devtool = '#source-map'
+    if (!this.dev) {
       // http://vue-loader.vuejs.org/en/workflow/production.html
       config.plugins = (config.plugins || []).concat([
         new webpack.DefinePlugin({
           'process.env': {
-            NODE_ENV: '"production"'
+            NODE_ENV: '"production"',
           }
         }),
         // new PrerenderSpaPlugin(
@@ -147,9 +166,6 @@ class WebpackConfig {
         //     '/',
         //   ]
         // ),
-        new webpack.LoaderOptionsPlugin({
-          minimize: true
-        })
       ])
     }
 
@@ -157,5 +173,7 @@ class WebpackConfig {
   }
 }
 
-
-module.exports = (new WebpackConfig).config()
+module.exports = function(env) {
+  let config = new WebpackConfig(env)
+  return config.config()
+}

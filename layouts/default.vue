@@ -1,20 +1,21 @@
 <template>
   <div>
     <HeaderBar />
-    <section class="section">
-      <nuxt />
-    </section>
+    <slot />
     <FooterBar />
   </div>
 </template>
 
 <script>
+  import HeaderBar from '~components/HeaderBar.vue'
+  import FooterBar from '~components/FooterBar.vue'
+
   export default {
     props: ['title'],
 
     components: {
-      HeaderBar: require('~components/HeaderBar'),
-      FooterBar: require('~components/FooterBar'),
+      HeaderBar,
+      FooterBar,
     },
   }
 </script>

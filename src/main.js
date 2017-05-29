@@ -1,9 +1,14 @@
 import Vue from 'vue'
 
-import '~/plugins/ui-framework'
-import '~/plugins/global-components'
 import { router } from './router'
-import App from './App.vue'
+import './ui-framework'
+import './global-components'
+import '~assets/global.css'
+
+const App = {
+  template: '<router-view />',
+  name: 'AppRoot'
+}
 
 const $app = new Vue({
   el: '#app',
