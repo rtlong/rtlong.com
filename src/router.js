@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import pathToRegexp from 'path-to-regexp'
+import { log } from '~/src/util'
 
 function loadAllPages() {
   let r = require.context('~pages', true, /\.vue$/)
@@ -125,33 +126,15 @@ function buildRoutes(pages) {
     return page
   })))
 
-  console.log('Generated Routes:')
-  console.group()
-  routes.forEach(route => console.log(route))
-  console.groupEnd()
+  log('Generated Routes:')
+  routes.forEach(route => log(route))
 
   return routes
 }
 
-const routes = buildRoutes(loadAllPages())
-
 export const router = new VueRouter({
-  routes,
-    // { path: '/',
-    //   component: require('~pages/index.vue') },
-    // { path: '/routes',
-    //   component: require('~pages/routes.vue') },
-    // { path: '/blog',
-    //   component: require('~pages/blog.vue'),
-    //   children: [
-    //     { path: '',
-    //       component: require('~pages/blog/index.vue') },
-    //     { path: '1-first-post',
-    //       component: require('~pages/blog/1-first-post.vue') },
-    //     { path: ':id(\\d+)(-[a-zA-Z0-9_-]+)?',
-    //       component: require('~pages/blog/_id.vue'),
-    //       props: true,
-    //     } ] }
+  routes: buildRoutes(loadAllPages()),
+  mode: 'history',
 })
 
 Vue.use(VueRouter)

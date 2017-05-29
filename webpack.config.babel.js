@@ -1,6 +1,9 @@
 import path from 'path'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin'
 
 const routingLoader = require.resolve('./webpack/routing-loader')
 
@@ -17,7 +20,7 @@ class WebpackConfig {
     })
     this.options = {
       build: {
-        extractCSS: null,
+        extractCSS: true,
         postcss: null,
       },
     }
@@ -30,11 +33,16 @@ class WebpackConfig {
   styleLoader(ext, loader = []) {
     if (this.extractStyles()) {
       return ExtractTextPlugin.extract({
-        use: ['css-loader?minify&sourceMap'].concat(loader),
+        use: [
+          'css-loader?minify&sourceMap'
+        ].concat(loader),
         fallback: 'vue-style-loader?sourceMap'
       })
     }
-    return ['vue-style-loader?sourceMap', 'css-loader?sourceMap'].concat(loader)
+    return [
+      'vue-style-loader?sourceMap',
+      'css-loader?sourceMap'
+    ].concat(loader)
   }
 
   config() {
@@ -44,9 +52,9 @@ class WebpackConfig {
       },
 
       output: {
-        path: path.resolve(__dirname, './dist'),
+        path: path.resolve(__dirname, './dist/'),
         publicPath: '/dist/',
-        filename: this.dev ? '[name].js' : '[name].[chunkHash].js',
+        filename: this.dev ? '[name].js' : '[name].[hash].js',
       },
 
       resolve: {
@@ -81,7 +89,7 @@ class WebpackConfig {
               loaders: {
                 js: 'babel-loader?' + this.babelOptions,
                 css: this.styleLoader('css'),
-                routing: [routingLoader],
+                routing: routingLoader,
               },
               preserveWhitespace: false,
               extractCSS: this.extractStyles(),
@@ -103,43 +111,45 @@ class WebpackConfig {
             test: /\.css$/,
             use: this.styleLoader('css'),
           },
-          {
-            test: /\.less$/,
-            use: this.styleLoader('less', 'less-loader'),
-          },
-          {
-            test: /\.sass$/,
-            use: this.styleLoader('sass', 'sass-loader?indentedSyntax&sourceMap'),
-          },
-          {
-            test: /\.scss$/,
-            use: this.styleLoader('sass', 'sass-loader?sourceMap'),
-          },
-          {
-            test: /\.styl(us)?$/,
-            use: this.styleLoader('stylus', 'stylus-loader'),
-          },
         ],
       },
 
       devServer: {
         historyApiFallback: true,
-        noInfo: true
+        host: '0.0.0.0',
+        port: 8080,
+        hot: true,
+        inline: true,
+        overlay: true,
+        publicPath: '/dist/',
       },
 
       performance: {
-        hints: this.dev ? false : 'error',
+        hints: this.dev ? false : 'warning',
         maxAssetSize: 500000,
       },
 
       devtool: this.dev ? 'cheap-module-source-map' : '#source-map',
 
       plugins: [
+        new ExtractTextPlugin({
+          filename: 'styles.css',
+          allChunks: true,
+          disable: !this.dev,
+        }),
+        new HtmlWebpackPlugin({
+          title: 'RTLong',
+          filename: 'index.html',
+          template: 'node_modules/html-webpack-template/index.ejs',
+          mobile: true,
+          appMountId: 'app',
+          inject: false,
+        }),
         new webpack.optimize.CommonsChunkPlugin({
           name: 'vendor',
           minChunks: function (module) {
-            // this assumes your vendor imports exist in the node_modules directory
-            return module.context && module.context.indexOf('node_modules') !== -1;
+            return module.context
+              && module.context.indexOf('node_modules') !== -1;
           }
         }),
         new webpack.optimize.CommonsChunkPlugin({
@@ -150,6 +160,7 @@ class WebpackConfig {
           openAnalyzer: false,
           logLevel: 'warn',
         }),
+        new webpack.HotModuleReplacementPlugin(),
       ],
     }
 

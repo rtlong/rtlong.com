@@ -6,7 +6,7 @@ import './global-components'
 import '~assets/global.css'
 
 const App = {
-  template: '<router-view />',
+  template: '<div id="#app"><router-view /></div>',
   name: 'AppRoot'
 }
 

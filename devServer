@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+
+import webpack from 'webpack'
+import express from 'express'
+import webpackDevMiddleware from 'webpack-dev-middleware'
+import webpackHotMiddleware from 'webpack-hot-middleware'
+import configF from './webpack.config.babel'
+
+const config = configF()
+
+const compiler = webpack(config)
+const app = express()
+
+const devMiddleware = webpackDevMiddleware(compiler, Object.assign({
+  publicPath: config.output.publicPath,
+  historyApiFallback: true,
+}, config.devServer))
+
+app.use(devMiddleware)
+app.use(webpackHotMiddleware(compiler))
+
+app.get('*', (req, res) => {
+  // Here is it! Get the index.html from the fileSystem
+  const htmlBuffer = devMiddleware.fileSystem.readFileSync(`${config.output.path}/index.html`)
+
+  res.send(htmlBuffer.toString())
+})
+
+const server = app.listen(config.devServer.port, config.devServer.host, undefined, () => {
+  console.log(`Now listening on http://${config.devServer.host}:${server.address().port}`)
+})

@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import globals from '~components/globals'
 import layouts from '~layouts/index'
+import { log } from './util'
 
 function registerGlobalComponent(name, component) {
-  console.log(`Registering ${name} component globally`)
+  log(`Registering ${name} component globally`)
   Vue.component(name, component)
 }
 for (let name in globals) {

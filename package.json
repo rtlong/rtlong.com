@@ -6,8 +6,8 @@
   "private": true,
   "dependencies": {},
   "scripts": {
-    "dev": "env NODE_ENV=development webpack-dev-server --open --hot",
-    "build": "env NODE_ENV=production webpack --progress --hide-modules",
+    "dev": "env NODE_ENV=development node -e 'require(\"babel-register\"); require(\"./devServer\")'",
+    "build": "env NODE_ENV=production webpack",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint"
   },
@@ -26,6 +26,10 @@
     "eslint-plugin-html": "^2.0.0",
     "eslint-plugin-promise": "^3.4.1",
     "eslint-plugin-standard": "^2.0.1",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "html-webpack-harddisk-plugin": "^0.1.0",
+    "html-webpack-plugin": "^2.28.0",
+    "html-webpack-template": "^6.0.1",
     "path-to-regexp": "1.7.0",
     "pify": "^3.0.0",
     "prerender-spa-plugin": "^2.0.1",
@@ -35,6 +39,7 @@
     "vue-template-compiler": "^2.3.3",
     "webpack": "^2.6.1",
     "webpack-bundle-analyzer": "^2.8.2",
-    "webpack-dev-server": "^2.4.5"
+    "webpack-dev-middleware": "^1.10.2",
+    "webpack-hot-middleware": "^2.18.0"
   }
 }
