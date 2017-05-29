@@ -3,7 +3,7 @@
     <h1>Blog.vue (parent page)</h1>
     <p>What follows is the child page:</p>
     <div class="child">
-      <nuxt-child />
+      <router-view />
     </div>
   </div>
 </template>

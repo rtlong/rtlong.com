@@ -6,16 +6,16 @@
 </template>
 
 <script>
-  import RouteTable from '~components/RouteTable'
+  import RouteTable from '~components/RouteTable.vue'
 
   export default {
     components: {
       RouteTable,
     },
 
-    asyncData(context) {
+    data() {
       return {
-        routes: context.app.router.options.routes,
+        routes: this.$router.options.routes,
       }
     },
   }

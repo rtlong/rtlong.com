@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import Route from '~components/Route'
+  import Route from '~components/Route.vue'
 
   export default {
     components: {

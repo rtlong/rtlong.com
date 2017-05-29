@@ -1,11 +1,9 @@
 <template>
-
   <section class="hero is-primary is-bold">
     <div class="hero-body">
       <div class="container">
         <h1 class="title">RTLong</h1>
         <h2 class="subtitle">My Random Thoughts and Ideas <b-icon icon="user"/></h2>
-        <MdcToolbar></MdcToolbar>
       </div>
     </div>
   </section>

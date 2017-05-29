@@ -1,8 +1,8 @@
 <template>
   <li class="route">
-    <nuxt-link :to="linkPath">
+    <router-link :to="linkPath">
       <span class="path">{{ linkPath }}</span>&nbsp;<span class="name">("{{ name }}")</span>
-    </nuxt-link>
+    </router-link>
     <ul v-if="children.length > 0">
       <Route v-for="child in children" :key="child.path" :route="child" :parentPath="path" />
     </ul>
