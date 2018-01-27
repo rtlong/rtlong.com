@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -euo pipefail
+set -x
+
+exec docker-compose run --rm hugo "$@"
