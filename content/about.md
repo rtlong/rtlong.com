@@ -4,5 +4,4 @@ description: ""
 title: about
 type: singular
 draft: true
-headless: true
 ---

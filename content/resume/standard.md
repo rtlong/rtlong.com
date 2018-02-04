@@ -2,7 +2,6 @@
 title: Resume
 description: The resume of Ryan Taylor Long
 resume_version: standard
-headless: true
 draft: true
 ---
 
