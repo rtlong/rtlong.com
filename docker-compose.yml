@@ -5,9 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.webpack
-    command: webpack
+    command: webpack --watch
+    working_dir: /app/themes/rtlong
     volumes:
-      - './themes/rtlong/:/app'
+      - '.:/app'
 
   hugo:
     build:

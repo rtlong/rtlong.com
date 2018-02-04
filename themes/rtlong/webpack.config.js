@@ -20,7 +20,7 @@ module.exports = {
 
     plugins: [
         // new webpack.NoErrorsPlugin(),
-        new AssetsPlugin({ path: path.join(__dirname, 'tmp') }), // emit webpack-assets.json file for Hugo template
+      new AssetsPlugin({ filename: 'webpack.json', path: path.join(__dirname, '..', '..', 'data') }), // emit webpack-assets.json file for Hugo template
         new ExtractTextPlugin('[name].css'),
     ],
 

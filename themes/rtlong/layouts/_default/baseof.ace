@@ -1,4 +1,4 @@
-{{ $webpackAssets := getJSON "themes/rtlong/tmp/webpack-assets.json" }}
+{{ $webpackAssets := .Site.Data.webpack }}
 = doctype html
 html lang=en
   head
@@ -17,18 +17,17 @@ html lang=en
 
     meta name=viewport content="width=device-width user-scalable=no"
 
-    link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"
-    link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/github.min.css"
+    link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"
+    link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/github.min.css"
     link rel="stylesheet" href="/{{$webpackAssets.main.css}}"
 
   body
+    // pre
+    //   code {{ printf "%#v" $webpackAssets }}
     header#header
       = yield header
         a href="/"
-          svg#logo viewBox="0 0 1000 510" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none" title="Ryan Long" alt="Ryan Long"
-            {{ partial .Site.Params.header.logoImageURL }}
-
-          div.name.sr-only {{.Site.Params.header.title}}
+          div.name {{.Site.Params.header.title}}
           div.subname {{.Site.Params.header.shortBio | safeHTML}}
 
     #container.wrapper.container-fluid
@@ -38,7 +37,7 @@ html lang=en
       .container-fluid
         = yield footer
 
-    script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"
-    script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"
-    script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"
+    script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"
+    script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"
+    script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"
     script src="/{{$webpackAssets.main.js}}" charset="utf-8"

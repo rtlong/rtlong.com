@@ -5,28 +5,31 @@
         ul.list-inline
           li
             a href="https://github.com/rtlong" Github
+
           li
             a href="mailto:{{.Site.Params.email}}" Email
+
+          {{ with $.Site.GetPage "page" "resume/standard.md" }}
           li
-            a href="/resume/standard.html" Resume
+            a href="{{ .URL }}" {{ .Title }}
+          {{ end }}
 
-  .row
-    .col-sm-12
-      h2 Blog Posts
-      {{ range .Data.Pages }}
-      article.post
-        header
-          h3
-            a href={{.Permalink}} {{.Title}}
-          h4.date {{ .Date.Format "Mon Jan 2, 2006" }}
-          h4.wc {{.FuzzyWordCount}} words
-          h4.section {{.Section}}
-          p.description {{.Description}}
-        / section.summary
-        /   {{.Summary}}
-        /   {{ if .Truncated }}
-        /   a.read-more-link href="{{ .RelPermalink }}" Read More…
-        /   {{ end }}
-      hr
-
-      {{ end }}
+  // .row
+  //   .col-sm-12
+  //     h2 Blog Posts
+  //     {{ range .Data.Pages }}
+  //     article.post
+  //       header
+  //         h3
+  //           a href={{.Permalink}} {{.Title}}
+  //         h4.date {{ .Date.Format "Mon Jan 2, 2006" }}
+  //         h4.wc {{.FuzzyWordCount}} words
+  //         h4.section {{.Section}}
+  //         p.description {{.Description}}
+  //       / section.summary
+  //       /   {{.Summary}}
+  //       /   {{ if .Truncated }}
+  //       /   a.read-more-link href="{{ .RelPermalink }}" Read More…
+  //       /   {{ end }}
+  //     hr
+  //     {{ end }}

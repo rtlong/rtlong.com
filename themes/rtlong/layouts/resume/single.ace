@@ -4,10 +4,12 @@
 = content footer
   .row
     .col-md-12
+      // p. Lastmod:
+      //       {{dateFormat "2 Jan 2006" .Lastmod}}
       p.
         Last Updated:
-          {{if .Date.IsZero}}
+          {{if .Lastmod.IsZero}}
             {{dateFormat "2 Jan 2006" .Site.LastChange}}
           {{else}}
-            {{dateFormat "2 Jan 2006" .Date}}
+            {{dateFormat "2 Jan 2006" .Lastmod}}
           {{end}}

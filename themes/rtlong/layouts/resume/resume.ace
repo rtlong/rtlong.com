@@ -1,5 +1,4 @@
-{{ $resumeData := index .Site.Data.resume .Params.resume_version }}
-{{with $resumeData}}
+{{with .Site.Data.resume.standard}}
   {{with .basics}}
     section.sr-only.row.name
       div.col-sm-9.col-sm-push-3
@@ -33,6 +32,15 @@
                 {{.city}}, {{.region}}, {{.countryCode}}
           {{end}}
 
+        {{with .profiles}}
+          section.profiles title="Social Profile Links"
+            ul.list-inline.list-badges
+              {{range .}}
+                li
+                  a href="{{.url}}" title="{{.network}}" {{.network}}
+              {{end}}
+        {{end}}
+
     {{if .summary}}
       section class="about row"
         div class="col-sm-12"
@@ -50,23 +58,6 @@
             {{with .availability}}
               dt Availability
               dd {{.}}
-            {{end}}
-    {{end}}
-
-    {{with .profiles}}
-      section class="profiles row"
-        div class="col-sm-12"
-          hr
-        div class="col-sm-3"
-          h2 Profiles
-
-        div class="col-sm-9"
-          dl class="dl-horizontal"
-            {{range .}}
-              dt {{.network}}
-              dd
-                // a href="{{.url}}" {{with .username}}{{.}}{{else}}{{.url}}{{end}}
-                a href="{{.url}}" {{.url}}
             {{end}}
     {{end}}
   {{end}}
