@@ -1,0 +1,10 @@
+#wrapper nav.error #error {
+  display: flex;
+  border: solid 1px #ffffff;
+  border-radius: 4px;
+  margin: 0;
+  padding: 1rem;
+}
+#wrapper nav.error::after {
+  display: none !important;
+}
