@@ -96,7 +96,7 @@ enableRobotsTXT =             true
 theme =                       "dimension"
 title =                       "RTLong"
 # if true, use /filename.html instead of /filename/
-uglyURLs =                    true
+uglyURLs =                    false
 # verbose output
 verbose =                     false
 # verbose logging
