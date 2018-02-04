@@ -1,8 +1,9 @@
 ---
 title: Resume
-description: The Resume of Ryan Taylor Long
+description: The resume of Ryan Taylor Long
 resume_version: standard
-weight: 1
+headless: true
+draft: true
 ---
 
 This content isn't used. Look at `layouts/resume/resume.ace`
