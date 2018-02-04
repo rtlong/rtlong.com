@@ -11,7 +11,7 @@ dev-open:
 
 .PHONY: hugo
 hugo:
-	docker-compose run --rm hugo hugo
+	docker-compose run --rm hugo
 
 .PHONY: webpack
 webpack:
