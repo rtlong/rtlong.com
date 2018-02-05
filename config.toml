@@ -26,6 +26,7 @@ buildExpired =                false
 # disableRSS =                  false
 # Do not build Sitemap file
 # disableSitemap =              false
+disqusShortname = "rtlong"
 # Enable GitInfo feature
 enableGitInfo =               true
 # Build robots.txt file
@@ -93,7 +94,7 @@ enableRobotsTXT =             true
 # stepAnalysis =                false
 # theme to use (located by default in /themes/THEMENAME/)
 # themesDir =                   "themes"
-theme =                       "dimension"
+theme =                       ""
 title =                       "RTLong"
 # if true, use /filename.html instead of /filename/
 uglyURLs =                    false
@@ -105,8 +106,10 @@ verboseLog =                  false
 # watch =                       true
 
 [taxonomies]
-### END all built-in variables ###
+tag = "tags"
+category = "category"
 
+### END all built-in variables ###
 
 [author]
 main = "Ryan Taylor Long"

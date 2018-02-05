@@ -1,6 +1,0 @@
-= content main
-  .row
-    .col-md-12.text-center
-      p Whoops! Page not found.
-      p
-        a href="/" Try the homepage.

@@ -1,12 +1,3 @@
 [submodule "data/resume"]
 	path = data/resume
 	url = https://github.com/rtlong/resume.git
-[submodule "themes/future-imperfect"]
-	path = themes/future-imperfect
-	url = https://github.com/jpescador/hugo-future-imperfect.git
-[submodule "themes/aerial"]
-	path = themes/aerial
-	url = https://github.com/sethmacleod/aerial.git
-[submodule "themes/dimension"]
-	path = themes/dimension
-	url = https://github.com/sethmacleod/dimension.git
