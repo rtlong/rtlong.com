@@ -1,255 +1,256 @@
-{{ $resumeData := index .Site.Data.resume ($.Param "resume_version") }}
+{{ define "main" }}
+  {{ $resumeData := index .Site.Data.resume ($.Param "resume_version") }}
+  {{with $resumeData}}
+    {{with .basics}}
+      <section class="sr-only row name">
+        <div class="col-sm-9 col-sm-push-3">
+          <h1>Resume</h1>
+          <h2>{{.name}}</h2>
+          <h3>{{.label}}</h3>
+          <hr/>
+        </div>
+      </section>
 
-{{with $resumeData}}
-  {{with .basics}}
-    <section class="sr-only row name">
-      <div class="col-sm-9 col-sm-push-3">
-        <h1>Resume</h1>
-        <h2>{{.name}}</h2>
-        <h3>{{.label}}</h3>
-        <hr/>
-      </div>
-    </section>
-
-    <section class="row contact">
-      <div class="col-sm-3">
-        <h2>Contact</h2>
-      </div>
-      <div class="col-sm-9">
-        <dl class="dl-horizontal">
-          {{with .email}}
-            <dt>Email</dt>
-            <dd>{{.}}</dd>
-          {{end}}
-          {{with .phone}}
-            <dt>Phone</dt>
-            <dd>{{.}}</dd>
-          {{end}}
-          {{with .website}}
-            <dt>Website</dt>
-            <dd><a href="{{.}}">{{.}}</a></dd>
-          {{end}}
-          {{with .location}}
-            <dt>Location</dt>
-            <dd>
-              <address>{{.city}}, {{.region}}, {{.countryCode}}</address>
-            </dd>
-          {{end}}
-        </dl>
-        {{with .profiles}}
-          <section class="profiles" title="Social Profile Links">
-            <ul class="list-inline list-badges">
-              {{range .}}
-                <li><a href="{{.url}}" title="{{.network}}">{{.network}}</a></li>
-              {{end}}
-            </ul>
-          </section>
-        {{end}}
-      </div>
-    </section>
-
-    {{if .summary}}
-      <section class="about row">
-        <div class="col-sm-12"> <hr/> </div>
+      <section class="row contact">
         <div class="col-sm-3">
-          <h2>About</h2>
+          <h2>Contact</h2>
         </div>
         <div class="col-sm-9">
-          {{with .picture}}
-            <div class="portrait pull-right">
-              <img src="{{.}}" width="100" class="img-responsive img-circle" alt="my portrait"/>
-            </div>
-          {{end}}
-          <p class="summary">{{.summary | markdownify}}</p>
           <dl class="dl-horizontal">
-            {{with .availability}}
-              <dt>Availability</dt>
+            {{with .email}}
+              <dt>Email</dt>
               <dd>{{.}}</dd>
             {{end}}
+            {{with .phone}}
+              <dt>Phone</dt>
+              <dd>{{.}}</dd>
+            {{end}}
+            {{with .website}}
+              <dt>Website</dt>
+              <dd><a href="{{.}}">{{.}}</a></dd>
+            {{end}}
+            {{with .location}}
+              <dt>Location</dt>
+              <dd>
+                <address>{{.city}}, {{.region}}, {{.countryCode}}</address>
+              </dd>
+            {{end}}
           </dl>
+          {{with .profiles}}
+            <section class="profiles" title="Social Profile Links">
+              <ul class="list-inline list-badges">
+                {{range .}}
+                  <li><a href="{{.url}}" title="{{.network}}">{{.network}}</a></li>
+                {{end}}
+              </ul>
+            </section>
+          {{end}}
+        </div>
+      </section>
+
+      {{if .summary}}
+        <section class="about row">
+          <div class="col-sm-12"> <hr/> </div>
+          <div class="col-sm-3">
+            <h2>About</h2>
+          </div>
+          <div class="col-sm-9">
+            {{with .picture}}
+              <div class="portrait pull-right">
+                <img src="{{.}}" width="100" class="img-responsive img-circle" alt="my portrait"/>
+              </div>
+            {{end}}
+            <p class="summary">{{.summary | markdownify}}</p>
+            <dl class="dl-horizontal">
+              {{with .availability}}
+                <dt>Availability</dt>
+                <dd>{{.}}</dd>
+              {{end}}
+            </dl>
+          </div>
+        </section>
+      {{end}}
+    {{end}}
+
+    {{with .work}}
+      <section class="work row">
+        <div class="col-sm-12"> <hr/> </div>
+        <div class="col-sm-3">
+          <h2>Work</h2>
+        </div>
+        <div class="col-sm-9">
+          {{range .}}
+            <header class="clearfix">
+              <h3 class="pull-left">{{.company}}</h3>
+              <div class="date-location pull-right">
+                <div class="date">{{.startDate}} – {{with .endDate}}{{.}}{{else}}present{{end}}</div>
+                {{with .location}}
+                  <div class="location">{{.}}</div>
+                {{end}}
+              </div>
+              {{with .position}}
+                <div class="pull-left position">{{.}}</div>
+              {{end}}
+            </header>
+            {{with .summary}}
+              <div class="summary">
+                <p>{{. | markdownify}}</p>
+              </div>
+            {{end}}
+            {{with .highlights}}
+              <h4>Highlights</h4>
+              <div class="highlights">
+                <p>{{. | markdownify}}</p>
+              </div>
+            {{end}}
+            {{with .technologies}}
+              <h4>Technologies Used</h4>
+              <ul class="technologies list-inline list-badges">
+                {{range .}}
+                  <li>{{.}}</li>
+                {{end}}
+              </ul>
+            {{end}}
+            <hr class="range"/>
+          {{end}}
         </div>
       </section>
     {{end}}
-  {{end}}
 
-  {{with .work}}
-    <section class="work row">
-      <div class="col-sm-12"> <hr/> </div>
-      <div class="col-sm-3">
-        <h2>Work</h2>
-      </div>
-      <div class="col-sm-9">
-        {{range .}}
-          <header class="clearfix">
-            <h3 class="pull-left">{{.company}}</h3>
-            <div class="date-location pull-right">
-              <div class="date">{{.startDate}} – {{with .endDate}}{{.}}{{else}}present{{end}}</div>
-              {{with .location}}
-                <div class="location">{{.}}</div>
-              {{end}}
-            </div>
-            {{with .position}}
-              <div class="pull-left position">{{.}}</div>
-            {{end}}
-          </header>
-          {{with .summary}}
-            <div class="summary">
-              <p>{{. | markdownify}}</p>
-            </div>
-          {{end}}
-          {{with .highlights}}
-            <h4>Highlights</h4>
-            <div class="highlights">
-              <p>{{. | markdownify}}</p>
-            </div>
-          {{end}}
-          {{with .technologies}}
-            <h4>Technologies Used</h4>
-            <ul class="technologies list-inline list-badges">
-              {{range .}}
-                <li>{{.}}</li>
-              {{end}}
-            </ul>
-          {{end}}
-          <hr class="range"/>
-        {{end}}
-      </div>
-    </section>
-  {{end}}
-
-  {{with .volunteer}}
-    <section class="volunteer row">
-      <div class="col-sm-12"> <hr/> </div>
-      <div class="col-sm-3">
-        <h2>Volunteer</h2>
-      </div>
-      <div class="col-sm-9">
-        {{range .}}
-          <header class="clearfix">
-            <h3 class="pull-left">
-              <a href="{{.website}}">{{.organization}}</a>
-            </h3>
-            <div class="date-location pull-right">
-              <div class="date">{{.startDate}} – {{with .endDate}}{{.}}{{else}}present{{end}}</div>
-              {{with .location}}
-                <div class="location">{{.}}</div>
-              {{end}}
-            </div>
-            {{with .position}}
-              <div class="pull-left position">{{.}}</div>
-            {{end}}
-          </header>
-          {{with .summary}}
-            <div class="summary">
-              <p>{{. | markdownify}}</p>
-            </div>
-          {{end}}
-          {{with .highlights}}
-            <h4>Highlights</h4>
-            <div class="highlights">
-              <p>{{. | markdownify}}</p>
-            </div>
-          {{end}}
-        {{end}}
-      </div>
-    </section>
-  {{end}}
-
-  {{with .education}}
-    <section class="education row">
-      <div class="col-sm-12"> <hr> </div>
-      <div class="col-sm-3">
-        <h2>Education</h2>
-      </div>
-      <div class="col-sm-9">
-        {{range .}}
-          <h3>{{.institution}}</h3>
-          <div class="date">{{.startDate}} — {{.endDate}}</div>
-          {{with .area}}
-            <div class="area">{{.}}</div>
-          {{end}}
-          {{with .studyType}}
-            <div class="studyType">{{.}}</div>
-          {{end}}
-          {{with .courses}}
-            <h4>Courses</h4>
-            <ul class="courses">
-              {{range .}}
-                <li>{{.}}</li>
-              {{end}}
-            </ul>
-          {{end}}
-        {{end}}
-      </div>
-    </section>
-  {{end}}
-
-  {{with .skills}}
-    <section class="skills row">
-      <div class="col-sm-12"> <hr> </div>
-      <div class="col-sm-3">
-        <h2>Skills</h2>
-      </div>
-      <div class="col-sm-9">
-        <div class="row">
+    {{with .volunteer}}
+      <section class="volunteer row">
+        <div class="col-sm-12"> <hr/> </div>
+        <div class="col-sm-3">
+          <h2>Volunteer</h2>
+        </div>
+        <div class="col-sm-9">
           {{range .}}
-            <div class="col-sm-6">
-              {{with .name}}
-                <h3>{{.}}</h3>
+            <header class="clearfix">
+              <h3 class="pull-left">
+                <a href="{{.website}}">{{.organization}}</a>
+              </h3>
+              <div class="date-location pull-right">
+                <div class="date">{{.startDate}} – {{with .endDate}}{{.}}{{else}}present{{end}}</div>
+                {{with .location}}
+                  <div class="location">{{.}}</div>
+                {{end}}
+              </div>
+              {{with .position}}
+                <div class="pull-left position">{{.}}</div>
               {{end}}
-              {{with .level}}
-                <h4>{{.}}</h4>
-              {{end}}
-              {{with .keywords}}
-                <ul class="keywords">
-                  {{range .}}
-                    <li>{{.}}</li>
-                  {{end}}
-                </ul>
-              {{end}}
-            </div>
+            </header>
+            {{with .summary}}
+              <div class="summary">
+                <p>{{. | markdownify}}</p>
+              </div>
+            {{end}}
+            {{with .highlights}}
+              <h4>Highlights</h4>
+              <div class="highlights">
+                <p>{{. | markdownify}}</p>
+              </div>
+            {{end}}
           {{end}}
         </div>
-      </div>
-    </section>
-  {{end}}
+      </section>
+    {{end}}
 
-  {{with .languages}}
-    <section class="languages row">
-      <div class="col-sm-12"> <hr> </div>
-      <div class="col-sm-3">
-        <h2>Languages</h2>
-      </div>
-      <div class="col-sm-9">
-        <div class="row">
+    {{with .education}}
+      <section class="education row">
+        <div class="col-sm-12"> <hr> </div>
+        <div class="col-sm-3">
+          <h2>Education</h2>
+        </div>
+        <div class="col-sm-9">
           {{range .}}
-            <div class="col-sm-6">
-              {{with .language}}
-                <h3 class="language">{{.}}</h3>
-              {{end}}
-              {{with .fluency}}
-                <h4 class="fluency">{{.}}</h4>
-              {{end}}
-            </div>
+            <h3>{{.institution}}</h3>
+            <div class="date">{{.startDate}} — {{.endDate}}</div>
+            {{with .area}}
+              <div class="area">{{.}}</div>
+            {{end}}
+            {{with .studyType}}
+              <div class="studyType">{{.}}</div>
+            {{end}}
+            {{with .courses}}
+              <h4>Courses</h4>
+              <ul class="courses">
+                {{range .}}
+                  <li>{{.}}</li>
+                {{end}}
+              </ul>
+            {{end}}
           {{end}}
-      </div>
-    </section>
-  {{end}}
+        </div>
+      </section>
+    {{end}}
 
-  {{with .testimonials}}
-    <section class="references row">
-      <div class="col-sm-12"> <hr/> </div>
-      <div class="col-sm-3">
-        <h2>References</h2>
-      </div>
-      <div class="col-sm-9">
-        {{range .}}
-          <blockquote class="reference">
-            <p>{{.body | markdownify}}</p>
-            <footer>{{.name | markdownify}}</footer>
-          </blockquote>
-        {{end}}
-      </div>
-    </section>
+    {{with .skills}}
+      <section class="skills row">
+        <div class="col-sm-12"> <hr> </div>
+        <div class="col-sm-3">
+          <h2>Skills</h2>
+        </div>
+        <div class="col-sm-9">
+          <div class="row">
+            {{range .}}
+              <div class="col-sm-6">
+                {{with .name}}
+                  <h3>{{.}}</h3>
+                {{end}}
+                {{with .level}}
+                  <h4>{{.}}</h4>
+                {{end}}
+                {{with .keywords}}
+                  <ul class="keywords">
+                    {{range .}}
+                      <li>{{.}}</li>
+                    {{end}}
+                  </ul>
+                {{end}}
+              </div>
+            {{end}}
+          </div>
+        </div>
+      </section>
+    {{end}}
+
+    {{with .languages}}
+      <section class="languages row">
+        <div class="col-sm-12"> <hr> </div>
+        <div class="col-sm-3">
+          <h2>Languages</h2>
+        </div>
+        <div class="col-sm-9">
+          <div class="row">
+            {{range .}}
+              <div class="col-sm-6">
+                {{with .language}}
+                  <h3 class="language">{{.}}</h3>
+                {{end}}
+                {{with .fluency}}
+                  <h4 class="fluency">{{.}}</h4>
+                {{end}}
+              </div>
+            {{end}}
+        </div>
+      </section>
+    {{end}}
+
+    {{with .testimonials}}
+      <section class="references row">
+        <div class="col-sm-12"> <hr/> </div>
+        <div class="col-sm-3">
+          <h2>References</h2>
+        </div>
+        <div class="col-sm-9">
+          {{range .}}
+            <blockquote class="reference">
+              <p>{{.body | markdownify}}</p>
+              <footer>{{.name | markdownify}}</footer>
+            </blockquote>
+          {{end}}
+        </div>
+      </section>
+    {{end}}
   {{end}}
 {{end}}

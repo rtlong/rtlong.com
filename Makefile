@@ -1,5 +1,5 @@
 .PHONY: build
-build: clean hugo webpack
+build: clean hugo
 
 .PHONY: dev
 dev: clean
@@ -11,11 +11,7 @@ dev-open:
 
 .PHONY: hugo
 hugo:
-	docker-compose run --rm hugo
-
-.PHONY: webpack
-webpack:
-	docker-compose run --rm webpack webpack
+	hugo
 
 .PHONY: clean
 clean:
@@ -27,7 +23,7 @@ deploy-deps:
 	aws configure set preview.cloudfront true
 
 ./public/index.html:
-	make hugo webpack
+	make hugo
 
 .PHONY: ensure-build
 ensure-build: ./public/index.html

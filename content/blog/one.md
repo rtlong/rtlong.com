@@ -7,7 +7,7 @@ tags:
 - whatevs
 ---
 
-Hey, this is a post.
+Hey, this is a post. :smile:
 
 There's more to it than meets the eye.
 
