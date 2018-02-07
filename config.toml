@@ -2,7 +2,7 @@ baseURL = "https://rtlong.com" # hostname (and path) to the root, e.g. http://sp
 buildDrafts = true # include content marked as draft
 buildFuture = false # include content with publishdate in the future
 buildExpired = false # include content already expired
-relativeURLs = false # enable this to make all relative URLs relative to content root. Note that this does not affect absolute URLs.
+relativeURLs = true # enable this to make all relative URLs relative to content root. Note that this does not affect absolute URLs.
 canonifyURLs = false
 debug = true
 disableLiveReload = false
@@ -31,9 +31,14 @@ copyright = "2015 Ryan Taylor Long"
 
 [taxonomies]
 tag = "tags"
-category = "category"
+category = "categories"
 
-[permalinks]
+[outputs]
+home = ["HTML", "JSON"]
+page = ["HTML", "JSON"]
+section = ["HTML", "JSON"]
+taxonomy = ["HTML", "JSON"]
+taxonomyTerm = ["HTML", "JSON"]
 
 [author]
 main = "Ryan Taylor Long"
@@ -42,7 +47,6 @@ main = "Ryan Taylor Long"
 avatarURL = "https://gravatar.com/avatar/053e38be1bd8b18bf8b1c26e11a797ff?s=256"
 email = "hello@rtlong.com"
 name = "Ryan Long"
-resume_version = "standard"
 logoIcon = "fa-paper-plane"
 tagline = "Software Engineer - Digital Nomad"
 
@@ -76,13 +80,7 @@ link = "mailto:hello@rtlong.com"
 # url = "mailto:hello@rtlong.com"
 # weight = 200
 
-[[menu.main]]
-name = "Github"
-url = "https://github.com/rtlong"
-weight = 0
-
-[[menu.main]]
-name = "Resume"
-url = "/resumes/standard/"
-identifier = "resumes"
-weight = 0
+# [[menu.main]]
+# name = "Github"
+# url = "https://github.com/rtlong"
+# weight = 0

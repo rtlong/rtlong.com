@@ -1,5 +1,6 @@
 {{ define "main" }}
-  {{ $resumeData := index .Site.Data.resume ($.Param "resume_version") }}
+  {{ $resumeKey := default (string .File) ($.Param "resume_version") }}
+  {{ $resumeData := index .Site.Data.resume $resumeKey }}
   {{with $resumeData}}
     {{with .basics}}
       <section class="sr-only row name">
@@ -252,5 +253,7 @@
         </div>
       </section>
     {{end}}
+  {{else}}
+    <p>Resume content for <code>{{$resumeKey}}</code> not found</p>
   {{end}}
 {{end}}

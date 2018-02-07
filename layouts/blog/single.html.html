@@ -1,0 +1,16 @@
+{{define "main"}}
+<h2>{{.Title}}</h2>
+<div class="date">
+  Posted {{ .Date.Format "2006-01-02" }}
+</div>
+{{ with .Params.tags }}
+<div class="tags">
+  Tags:
+  {{ delimit (apply (apply (sort .) "partial" "post-tag-link.html" ".") "chomp" ".") ", " }}
+</div>
+{{ end }}
+
+<article>
+  {{.Content}}
+</article>
+{{end}}

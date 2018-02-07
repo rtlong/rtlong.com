@@ -3,8 +3,9 @@ title: Yo I'm a Post
 slug: post1
 date: 2015-02-23
 tags:
-- post
 - whatevs
+categories:
+- post
 ---
 
 Hey, this is a post. :smile:
