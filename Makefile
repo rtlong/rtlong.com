@@ -1,17 +1,16 @@
 .PHONY: build
 build: clean hugo
 
-.PHONY: dev
-dev: clean
-	./script/dev-mode
-
-.PHONY: dev-open
-dev-open:
-	./script/dev-open
-
 .PHONY: hugo
-hugo:
+hugo: gulp
 	hugo
+
+.PHONY: gulp
+gulp: node_modules
+	npm run build
+
+node_modules:
+	npm install
 
 .PHONY: clean
 clean:
@@ -22,8 +21,7 @@ deploy-deps:
 	command -v aws > /dev/null 2>&1 || pip install awscli
 	aws configure set preview.cloudfront true
 
-./public/index.html:
-	make hugo
+./public/index.html: hugo
 
 .PHONY: ensure-build
 ensure-build: ./public/index.html

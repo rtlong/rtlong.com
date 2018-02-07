@@ -1,26 +1,46 @@
 {
-  "name": "rtlong.com-site",
-  "private": true,
-  "version": "0.0.0",
-  "description": "",
+  "name": "rtlong.com",
+  "version": "1.0.0",
+  "description": "This is my personal website: [rtlong.com][]. It's built with [Hugo][hugo], deployed on S3 and served via CloudFront for SSL termination and low latency.",
   "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {
-    "assets-webpack-plugin": "^3.4.0",
-    "css-loader": "^0.23.1",
-    "extract-text-webpack-plugin": "^1.0.1",
-    "file-loader": "^0.8.5",
-    "font-awesome": "^4.6.1",
-    "font-awesome-loader": "0.0.1",
-    "imports-loader": "^0.6.5",
-    "node-sass": "^3.7.0",
-    "resolve-url-loader": "^1.4.3",
-    "sass-loader": "^3.2.0",
-    "style-loader": "^0.13.1",
-    "url-loader": "^0.5.7",
-    "webpack": "^1.13.0"
+  "scripts": {
+    "build": "NODE_ENV=production gulp js css",
+    "start": "NODE_ENV=development gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rtlong/rtlong.com.git"
+  },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rtlong/rtlong.com/issues"
+  },
+  "browserslist": [
+    "defaults",
+    "not ie < 12",
+    "not ie_mob < 12"
+  ],
+  "homepage": "https://github.com/rtlong/rtlong.com#readme",
+  "dependencies": {
+    "autoprefixer": "^7.2.5",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "colorguard": "^1.2.1",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^7.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-hash": "^4.2.2",
+    "gulp-postcss": "^7.0.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-stylelint": "^6.0.0",
+    "normalize.css": "^7.0.0",
+    "postcss": "^6.0.17",
+    "postcss-cssnext": "^3.1.0",
+    "postcss-import": "^11.0.0",
+    "stylelint": "^8.4.0",
+    "stylelint-config-standard": "^18.0.0"
+  },
+  "devDependencies": {}
 }

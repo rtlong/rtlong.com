@@ -19,6 +19,7 @@ enableEmoji = true # Enable Emoji emoticons support for page content; see emoji-
 enableMissingTranslationPlaceholders = false # Show a placeholder instead of the default value or an empty string if a translation is missing
 googleAnalytics = "" # google analytics tracking id
 metaDataFormat = "yaml" # "toml","yaml", or "json"
+staticDir = ["static", "asset-bundles"]
 # theme = "rtlong"
 title = "RTLong"
 uglyURLs = false # if true, use /filename.html instead of /filename/
