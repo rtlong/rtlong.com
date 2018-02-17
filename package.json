@@ -4,8 +4,8 @@
   "description": "This is my personal website: [rtlong.com][]. It's built with [Hugo][hugo], deployed on S3 and served via CloudFront for SSL termination and low latency.",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production gulp js css",
-    "start": "NODE_ENV=development gulp",
+    "build": "NODE_ENV=production gulp build",
+    "start": "NODE_ENV=development DEV=1 gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,14 +24,16 @@
   ],
   "homepage": "https://github.com/rtlong/rtlong.com#readme",
   "dependencies": {
+    "ansi-colors": "^1.0.1",
     "autoprefixer": "^7.2.5",
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "colorguard": "^1.2.1",
+    "cssnano": "^4.0.0-rc.2",
     "gulp": "^4.0.0",
     "gulp-babel": "^7.0.1",
-    "gulp-concat": "^2.6.1",
     "gulp-hash": "^4.2.2",
+    "gulp-hash-filename": "^1.2.0",
     "gulp-postcss": "^7.0.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-stylelint": "^6.0.0",
@@ -42,5 +44,9 @@
     "stylelint": "^8.4.0",
     "stylelint-config-standard": "^18.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "gulp-connect": "^5.2.0",
+    "kexec": "^3.0.0",
+    "livereload-js": "^2.3.0"
+  }
 }
