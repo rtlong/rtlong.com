@@ -25,6 +25,7 @@ const postcssImport = require('postcss-import')
 
 const vnuJar = require('vnu-jar')
 const through2 = require('through2')
+const C = require('ansicolors')
 
 const patterns = {
   assetManifest: 'data/assets.json',
@@ -305,7 +306,15 @@ function isStaging() {
 
 function validatorReport() {
   return through2.obj(function (file, encoding, callback) {
-    console.log(file.contents.toString())
+    const data = JSON.parse(file.contents.toString())
+    // console.log(data)
+    data.messages.forEach(msg => {
+      console.log(
+        C.yellow(path.relative(process.cwd(), file.path)),
+        C.green(`${msg.firstLine || ''}:${msg.lastLine || ''}`),
+        C.white(msg.message),
+      )
+    })
     callback(null, file)
   })
 }
