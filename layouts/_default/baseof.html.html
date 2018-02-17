@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible"
           content="IE=edge,chrome=1">
 
-    <title>{{- $.Scratch.Get "title" -}}
+    <title>{{ $.Scratch.Get "title" }}
     </title>
 
     <meta name="description"
@@ -29,16 +29,22 @@
 
     {{ .Hugo.Generator }}
 
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="/css/{{ index $assets "main.css" }}">
+
     <script async src="/js/vendor/modernizr-custom.js"></script>
     <script defer src="/js/{{ index $assets "main.js" }}"></script>
+    <noscript>
+      <style>
+       .noscript { display: block; }
+      </style>
+    </noscript>
   </head>
   <body>
     {{ if getenv "DEV" }}{{ partial "contentInfo.html" . }}{{ end }}
 
     <div id="container">
-      <div class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+      <div class="noscript">Your browser has Javascript disabled; some features of this site may not function as intended.</div>
+      <div class="browsermsg">You are using an <strong>outdated</strong> browser. Please <a href="https://www.whatbrowser.org">upgrade your browser</a> to improve your experience.</div>
 
       <header>
         <h1 class="title">
@@ -46,31 +52,32 @@
         </h1>
         <nav>
           <ul>
-            {{- range sort .Site.Menus.main "Weight" "desc" }}
-            <li><a href="{{.URL}}" title="{{.Title}}" accesskey="{{ lower (substr .Title 0 1) }}">{{.Pre}} {{.Name}} {{.Post}}</a></li>
-            {{- end }}
+            {{ range sort .Site.Menus.main "Weight" "desc" }}
+              <li><a href="{{.URL}}" title="{{.Title}}" accesskey="{{ lower (substr .Title 0 1) }}">
+                {{.Pre}} {{.Name}} {{.Post}}
+              </a></li>
+            {{ end }}
           </ul>
         </nav>
       </header>
 
-      <div class="main">
-        {{- block "main" . }}
+      <div class="main section-{{.Section}}">
+        {{ block "main" . }}
         Default "main" content
-        {{ end -}}
+        {{ end }}
       </div>
 
       <footer>
-        {{- block "footer" . }}
+        {{ block "footer" . }}
         <copyright>
           &copy;
           {{with .Site.Copyright}}{{.}}
           {{else}}{{now.Format "2006"}} {{.Site.Author.main}}
           {{end}}
         </copyright>
-        {{ end -}}
+        {{ end }}
       </footer>
     </div>
-
 
   </body>
 </html>

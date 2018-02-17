@@ -1,259 +1,357 @@
-{{ define "main" }}
-  {{ $resumeKey := default (string .File) ($.Param "resume_version") }}
-  {{ $resumeData := index .Site.Data.resume $resumeKey }}
-  {{with $resumeData}}
-    {{with .basics}}
-      <section class="sr-only row name">
-        <div class="col-sm-9 col-sm-push-3">
-          <h1>Resume</h1>
-          <h2>{{.name}}</h2>
-          <h3>{{.label}}</h3>
-          <hr/>
-        </div>
-      </section>
-
-      <section class="row contact">
-        <div class="col-sm-3">
-          <h2>Contact</h2>
-        </div>
-        <div class="col-sm-9">
-          <dl class="dl-horizontal">
-            {{with .email}}
-              <dt>Email</dt>
-              <dd>{{.}}</dd>
-            {{end}}
-            {{with .phone}}
-              <dt>Phone</dt>
-              <dd>{{.}}</dd>
-            {{end}}
-            {{with .website}}
-              <dt>Website</dt>
-              <dd><a href="{{.}}">{{.}}</a></dd>
-            {{end}}
-            {{with .location}}
-              <dt>Location</dt>
-              <dd>
-                <address>{{.city}}, {{.region}}, {{.countryCode}}</address>
-              </dd>
-            {{end}}
-          </dl>
-          {{with .profiles}}
-            <section class="profiles" title="Social Profile Links">
-              <ul class="list-inline list-badges">
-                {{range .}}
-                  <li><a href="{{.url}}" title="{{.network}}">{{.network}}</a></li>
-                {{end}}
-              </ul>
-            </section>
-          {{end}}
-        </div>
-      </section>
-
-      {{if .summary}}
-        <section class="about row">
-          <div class="col-sm-12"> <hr/> </div>
-          <div class="col-sm-3">
-            <h2>About</h2>
-          </div>
-          <div class="col-sm-9">
-            {{with .picture}}
-              <div class="portrait pull-right">
-                <img src="{{.}}" width="100" class="img-responsive img-circle" alt="my portrait"/>
-              </div>
-            {{end}}
-            <p class="summary">{{.summary | markdownify}}</p>
-            <dl class="dl-horizontal">
-              {{with .availability}}
-                <dt>Availability</dt>
-                <dd>{{.}}</dd>
-              {{end}}
-            </dl>
-          </div>
-        </section>
-      {{end}}
-    {{end}}
-
-    {{with .work}}
-      <section class="work row">
-        <div class="col-sm-12"> <hr/> </div>
-        <div class="col-sm-3">
-          <h2>Work</h2>
-        </div>
-        <div class="col-sm-9">
-          {{range .}}
-            <header class="clearfix">
-              <h3 class="pull-left">{{.company}}</h3>
-              <div class="date-location pull-right">
-                <div class="date">{{.startDate}} – {{with .endDate}}{{.}}{{else}}present{{end}}</div>
-                {{with .location}}
-                  <div class="location">{{.}}</div>
-                {{end}}
-              </div>
-              {{with .position}}
-                <div class="pull-left position">{{.}}</div>
-              {{end}}
-            </header>
-            {{with .summary}}
-              <div class="summary">
-                <p>{{. | markdownify}}</p>
-              </div>
-            {{end}}
-            {{with .highlights}}
-              <h4>Highlights</h4>
-              <div class="highlights">
-                <p>{{. | markdownify}}</p>
-              </div>
-            {{end}}
-            {{with .technologies}}
-              <h4>Technologies Used</h4>
-              <ul class="technologies list-inline list-badges">
-                {{range .}}
-                  <li>{{.}}</li>
-                {{end}}
-              </ul>
-            {{end}}
-            <hr class="range"/>
-          {{end}}
-        </div>
-      </section>
-    {{end}}
-
-    {{with .volunteer}}
-      <section class="volunteer row">
-        <div class="col-sm-12"> <hr/> </div>
-        <div class="col-sm-3">
-          <h2>Volunteer</h2>
-        </div>
-        <div class="col-sm-9">
-          {{range .}}
-            <header class="clearfix">
-              <h3 class="pull-left">
-                <a href="{{.website}}">{{.organization}}</a>
-              </h3>
-              <div class="date-location pull-right">
-                <div class="date">{{.startDate}} – {{with .endDate}}{{.}}{{else}}present{{end}}</div>
-                {{with .location}}
-                  <div class="location">{{.}}</div>
-                {{end}}
-              </div>
-              {{with .position}}
-                <div class="pull-left position">{{.}}</div>
-              {{end}}
-            </header>
-            {{with .summary}}
-              <div class="summary">
-                <p>{{. | markdownify}}</p>
-              </div>
-            {{end}}
-            {{with .highlights}}
-              <h4>Highlights</h4>
-              <div class="highlights">
-                <p>{{. | markdownify}}</p>
-              </div>
-            {{end}}
-          {{end}}
-        </div>
-      </section>
-    {{end}}
-
-    {{with .education}}
-      <section class="education row">
-        <div class="col-sm-12"> <hr> </div>
-        <div class="col-sm-3">
-          <h2>Education</h2>
-        </div>
-        <div class="col-sm-9">
-          {{range .}}
-            <h3>{{.institution}}</h3>
-            <div class="date">{{.startDate}} — {{.endDate}}</div>
-            {{with .area}}
-              <div class="area">{{.}}</div>
-            {{end}}
-            {{with .studyType}}
-              <div class="studyType">{{.}}</div>
-            {{end}}
-            {{with .courses}}
-              <h4>Courses</h4>
-              <ul class="courses">
-                {{range .}}
-                  <li>{{.}}</li>
-                {{end}}
-              </ul>
-            {{end}}
-          {{end}}
-        </div>
-      </section>
-    {{end}}
-
-    {{with .skills}}
-      <section class="skills row">
-        <div class="col-sm-12"> <hr> </div>
-        <div class="col-sm-3">
-          <h2>Skills</h2>
-        </div>
-        <div class="col-sm-9">
-          <div class="row">
-            {{range .}}
-              <div class="col-sm-6">
-                {{with .name}}
-                  <h3>{{.}}</h3>
-                {{end}}
-                {{with .level}}
-                  <h4>{{.}}</h4>
-                {{end}}
-                {{with .keywords}}
-                  <ul class="keywords">
-                    {{range .}}
-                      <li>{{.}}</li>
-                    {{end}}
-                  </ul>
-                {{end}}
-              </div>
-            {{end}}
-          </div>
-        </div>
-      </section>
-    {{end}}
-
-    {{with .languages}}
-      <section class="languages row">
-        <div class="col-sm-12"> <hr> </div>
-        <div class="col-sm-3">
-          <h2>Languages</h2>
-        </div>
-        <div class="col-sm-9">
-          <div class="row">
-            {{range .}}
-              <div class="col-sm-6">
-                {{with .language}}
-                  <h3 class="language">{{.}}</h3>
-                {{end}}
-                {{with .fluency}}
-                  <h4 class="fluency">{{.}}</h4>
-                {{end}}
-              </div>
-            {{end}}
-        </div>
-      </section>
-    {{end}}
-
-    {{with .testimonials}}
-      <section class="references row">
-        <div class="col-sm-12"> <hr/> </div>
-        <div class="col-sm-3">
-          <h2>References</h2>
-        </div>
-        <div class="col-sm-9">
-          {{range .}}
-            <blockquote class="reference">
-              <p>{{.body | markdownify}}</p>
-              <footer>{{.name | markdownify}}</footer>
-            </blockquote>
-          {{end}}
-        </div>
-      </section>
-    {{end}}
-  {{else}}
-    <p>Resume content for <code>{{$resumeKey}}</code> not found</p>
-  {{end}}
+{{ define "link-p" }}
+{{ if .url }}
+  <a href="{{.url}}">{{ .name | markdownify }}</a>
+{{ else }}
+  {{ .name | markdownify }}
+{{ end }}
 {{end}}
+
+{{ define "date-range" }}
+<div class="date">
+  {{- .start | dateFormat .format -}}
+  &nbsp;&mdash;&nbsp;
+  {{- with .end -}}
+    {{ . | dateFormat $.format }}
+  {{- else -}}
+    present
+  {{- end -}}
+</div>
+{{end}}
+
+{{ define "main" }}
+{{ $resumeKey := default .File.BaseFileName (.Params.resume.version) }}
+{{ $resumeData := index .Site.Data.resume $resumeKey }}
+{{ $dateFormat := $.Param "resume.dateFormat" }}
+
+{{ with $resumeData }}
+  {{ with .basics }}
+    <section class="about">
+      <h1>Resume</h1>
+      <h2>{{ .name }}</h2>
+      <h3>{{ .label }}</h3>
+
+      {{ with .image }}
+        <div class="portrait">
+          <img src="{{ . }}" width="100" alt="my portrait"/>
+        </div>
+      {{ end }}
+
+      {{ with .summary }}
+        <p class="summary">{{ . | markdownify }}</p>
+      {{ end }}
+
+      <dl class="">
+        {{ with .availability }}
+          <div>
+            <dt>Availability</dt>
+            <dd>{{ . }}</dd>
+          </div>
+        {{ end }}
+
+        {{ with .email }}
+          <div>
+            <dt>Email</dt>
+            <dd><a href="mailto:{{.}}">{{ . }}</a></dd>
+          </div>
+        {{ end }}
+
+        {{ with .phone }}
+          <div>
+            <dt>Phone</dt>
+            <dd><a href="tel:{{.}}">{{ . }}</a></dd>
+          </div>
+        {{ end }}
+
+        {{ with .location }}
+          <div>
+            <dt>Location</dt>
+            <dd>
+              <address>{{ .city }}, {{ .region }}, {{ .countryCode }}</address>
+            </dd>
+          </div>
+        {{ end }}
+
+        <div>
+          <dt>On the web</dt>
+          <dd>
+            {{ with .url }}
+              <a href="{{ . }}">Website</a>
+            {{ end }}
+            {{ range .profiles }}
+              <a href="{{ .url }}" title="{{ .network }}">{{ .network }}</a>
+            {{ end }}
+          </dd>
+        </div>
+      </dl>
+    </section>
+  {{ end }}
+
+  {{ with .work }}
+    <section class="work">
+      <h2>Experience</h2>
+      {{ range . }}
+        <div>
+          <header>
+            <div class="company-position">
+              <h3 class="company-name">{{ template "link-p" . }}</h3>
+
+              {{ with .position }}
+                <div class="position">{{ . }}</div>
+              {{ end }}
+            </div>
+
+            <div class="date-location">
+              {{ template "date-range" (dict "format" $dateFormat "start" .startDate "end" .endDate) }}
+
+              {{ with .location }}
+                <div class="location">{{ . }}</div>
+              {{ end }}
+            </div>
+          </header>
+
+          {{ with .description }}
+            <div class="company-description">{{ . | markdownify }}</div>
+          {{ end }}
+
+          {{ with .summary }}
+            <div class="summary">
+              <p>{{ . | markdownify }}</p>
+            </div>
+          {{ end }}
+
+          {{ with .highlights }}
+            <!-- <h4>Highlights</h4> -->
+            <ul class="highlights">
+              {{ range . }}
+                <li>{{ . | markdownify }}</li>
+              {{ end }}
+            </ul>
+          {{ end }}
+
+          {{ with .technologies }}
+            <h4>Technologies Used</h4>
+            <ul class="technologies list-inline list-badges">
+              {{ range . }}
+                {{ $link := index $resumeData.meta.technologiesURLs . }}
+                <li>{{ template "link-p" (dict "url" $link "name" .) }}</li>
+              {{ end }}
+            </ul>
+          {{ end }}
+        </div>
+      {{ end }}
+    </section>
+  {{ end }}
+
+  {{ with .projects }}
+    <section class="projects">
+      <h2>Projects</h2>
+      {{ range . }}
+        <div>
+          <header>
+            <div class="project-position">
+              <h3 class="project-name"> {{ template "link-p" . }} </h3>
+
+              {{ with .roles }}
+                <div class="roles">{{ delimit . ", " }}</div>
+              {{ end }}
+            </div>
+
+            <div class="date-location">
+              {{ template "date-range" (dict "format" $dateFormat "start" .startDate "end" .endDate) }}
+
+              {{ with .location }}
+                <div class="location">{{ . }}</div>
+              {{ end }}
+            </div>
+          </header>
+
+          {{ with .description }}
+            <div class="description">{{ . | markdownify }}</div>
+          {{ end }}
+
+          <ul class="highlights">
+            {{ range .highlights }}
+              <li>{{ . | markdownify }}</li>
+            {{ end }}
+            {{ with .keywords }}
+              <li>Technologies involved: {{ delimit . ", " }}</li>
+            {{ end }}
+          </ul>
+
+          <!--
+          {{ with .keywords }}
+            <ul class="pill-list">
+              {{ range . }}
+                <li>{{.}}</li>
+              {{ end }}
+            </ul>
+          {{ end }}
+          -->
+        </div>
+      {{ end }}
+    </section>
+  {{ end }}
+
+  {{ with .volunteer }}
+    <section class="volunteer ">
+      <h2>Volunteer</h2>
+      {{ range . }}
+        <header>
+          <h3>{{ template "link-p" (dict "url" .url "name" .organization) }}</h3>
+
+          {{ template "date-range" (dict "format" $dateFormat "start" .startDate "end" .endDate) }}
+
+          {{ with .position }}
+            <div class="position">{{ . }}</div>
+          {{ end }}
+
+          {{ with .location }}
+            <div class="location">{{ . }}</div>
+          {{ end }}
+        </header>
+
+        {{ with .summary }}
+          <div class="summary">
+            <p>{{ . | markdownify }}</p>
+          </div>
+        {{ end }}
+
+        {{ with .highlights }}
+          <!-- <h4>Highlights</h4> -->
+          <div class="highlights">
+            <p>{{ . | markdownify }}</p>
+          </div>
+        {{ end }}
+      {{ end }}
+    </section>
+  {{ end }}
+
+  {{ with .education }}
+    <section class="education">
+      <h2>Education</h2>
+      {{ range . }}
+        <div>
+          <header>
+            <div>
+              <h3>{{ template "link-p" (dict "url" .url "name" .institution) }}</h3>
+
+              {{ if .studyType }}
+                <div>{{ .studyType }}{{ with .area }} - {{.}}{{end}}</div>
+              {{ end }}
+            </div>
+
+            <div class="date-location">
+              {{ template "date-range" (dict "format" $dateFormat "start" .startDate "end" .endDate) }}
+
+              {{ with .location }}
+                <div class="location">{{ . }}</div>
+              {{ end }}
+            </div>
+
+          </header>
+
+          {{ with .courses }}
+            <h4>Courses</h4>
+            <ul class="courses">
+              {{ range . }}
+                <li>{{ . }}</li>
+              {{ end }}
+            </ul>
+          {{ end }}
+        </div>
+      {{ end }}
+    </section>
+  {{ end }}
+
+  {{ with .skills }}
+    <section class="skills">
+      <h2>Skills</h2>
+      {{ range . }}
+        <div>
+
+          {{ with .name }}
+            <h3>{{ . }}</h3>
+          {{ end }}
+
+          {{ with .level }}
+            <h4>{{ . }}</h4>
+          {{ end }}
+
+          {{ with .keywords }}
+            <ul class="keywords">
+              {{ range . }}
+                <li>{{ . }}</li>
+              {{ end }}
+            </ul>
+          {{ end }}
+
+        </div>
+      {{ end }}
+    </section>
+  {{ end }}
+
+  {{ with .languages }}
+    <section class="languages">
+      <h2>Languages</h2>
+      {{ range . }}
+        <div>
+
+          {{ with .language }}
+            <h3 class="language">{{ . }}</h3>
+          {{ end }}
+
+          {{ with .fluency }}
+            <h4 class="fluency">{{ . }}</h4>
+          {{ end }}
+
+        </div>
+      {{ end }}
+    </section>
+  {{ end }}
+
+  {{ with .interests }}
+    <section class="interests">
+      <h2>Interests</h2>
+      {{ range . }}
+        <div>
+
+          {{ with .name }}
+            <h3 class="name">{{ . }}</h3>
+          {{ end }}
+
+          {{ with .keywords }}
+            <ul>
+              {{ range . }}
+                <li>{{ . }}</li>
+              {{ end }}
+            </ul>
+          {{ end }}
+
+        </div>
+      {{ end }}
+    </section>
+  {{ end }}
+
+  {{ with .references }}
+    <section class="references">
+      <h2>References</h2>
+      {{ range . }}
+          <blockquote>
+            <p>{{ .body | markdownify }}</p>
+            <cite>{{ .name | markdownify }}</cite>
+          </blockquote>
+      {{ end }}
+    </section>
+  {{ end }}
+
+  <div class="lastModified">
+    Last Modified:
+    <time datetime="{{ .meta.lastModified | dateFormat "2006-01-02T15:04:05Z07:00" }}">
+      {{ .meta.lastModified | dateFormat "2006 Jan 02" }}
+    </time>
+  </div>
+
+{{ else }}
+  <p>Resume content for <code>{{ $resumeKey }}</code> not found</p>
+{{ end }}
+{{ end }}

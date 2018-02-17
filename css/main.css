@@ -1,33 +1,34 @@
 @import url('normalize.css');
 
-/*! HTML5 Boilerplate v5.0 | MIT License | http://h5bp.com/ */
-
-::-moz-selection {
-  background: var(--color-blue1);
-  text-shadow: none;
-}
-
 ::selection {
-  background: var(--color-blue1);
+  background: var(--color-blue);
   text-shadow: none;
 }
 
 :root {
-  --color-blue1: #b3d4fc;
-  --color-grey1: #cccccc;
-  --color-grey2: #777777;
-  --color-orange1: orange;
   --color-white: white;
   --color-black: black;
-  --color-orange2: orangered;
-  --color-orange3: #8b2500;
-  --color-shadow-grey: #aaaaaa;
-
+  --color-blue: #00a0b0;
+  --color-brown: #6A4A3C;
+  --color-red: #CC333F;
+  --color-orange: #EB6841;
+  --color-yellow: #EDC951;
+  --color-lightgrey: #cccccc;
+  --color-medgrey: #777777;
+  --color-shadow-grey: var(--color-lightgrey);
   --layout-page-gutter: 1em;
   --layout-max-content-width: 1000px;
 }
 
-html {
+@custom-media --only-taller-screens only screen and (min-height: 600px);
+@custom-media --narrow-screens only screen and (min-width: 480px);
+@custom-media --mediumwide-screens only screen and (min-width: 768px);
+@custom-media --superwide-screens only screen and (min-width: 1000px);
+
+html,
+body {
+  font-family: Helvetica, Helvetica Neue, Arial, sans-serif;
+  height: 100%;
   color: var(--color-black);
   font-size: 1em;
   line-height: 1.4;
@@ -37,7 +38,7 @@ hr {
   display: block;
   height: 1px;
   border: 0;
-  border-top: 1px solid var(--color-grey1);
+  border-top: 1px solid var(--color-lightgrey);
   margin: 1em 0;
   padding: 0;
 }
@@ -61,35 +62,44 @@ textarea {
   resize: vertical;
 }
 
-.browserupgrade {
-  margin: 0;
-  background: var(--color-orange1);
-  color: var(--color-black);
-  padding: 0.4em 5%;
-  display: none;
-  flex: 0 1 auto;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  &:first-child {
+    margin-top: 0;
+  }
+}
 
-  @nest html.js & {
+.browsermsg,
+.noscript {
+  margin: 0;
+  background: var(--color-red);
+  color: var(--color-white);
+  padding: 0.4em var(--layout-page-gutter);
+  text-align: center;
+  flex: 0 1 auto;
+  display: none;
+}
+
+.browsermsg {
+  @nest html.no-flexbox & {
     display: block;
   }
 
-  @nest html.js.flexbox & {
+  @nest html.flexbox & {
     display: none;
   }
 }
 
-html,
-body {
-  font: 16px/26px Helvetica, Helvetica Neue, Arial, sans-serif;
-  height: 100%;
-}
-
 div#debugInfo {
   position: fixed;
-  top: 10px;
+  bottom: 10px;
   right: 10px;
   padding: 3px 2px 2px;
-  background-color: var(--color-grey1);
+  background-color: var(--color-lightgrey);
   font-size: smaller;
   line-height: 80%;
 
@@ -107,8 +117,8 @@ div#debugInfo {
 
   & > header {
     flex: 0 1 auto;
-    background: var(--color-orange3);
-    border-bottom: 5px solid var(--color-orange2);
+    background: var(--color-blue);
+    border-bottom: 5px solid var(--color-yellow);
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -122,6 +132,7 @@ div#debugInfo {
 
     & > h1.title {
       flex: 1 0 auto;
+      margin: 0.5em 0;
 
       & > a,
       & > a:visited,
@@ -196,8 +207,8 @@ div#debugInfo {
       color: var(--color-white);
       padding: 0 5% 10px;
       margin: 1em;
-      background: var(--color-orange3);
-      border-top: 5px solid var(--color-orange2);
+      background: var(--color-red);
+      border-top: 5px solid var(--color-yellow);
 
       @media (--only-taller-screens) {
         border-top-width: 20px;
@@ -218,8 +229,8 @@ div#debugInfo {
 
     & figure {
       align-items: stretch;
-      border-bottom: 1px solid var(--color-grey1);
-      border-top: 1px solid var(--color-grey1);
+      border-bottom: 1px solid var(--color-lightgrey);
+      border-top: 1px solid var(--color-lightgrey);
       display: flex;
       flex-direction: column;
       margin: 0;
@@ -232,7 +243,7 @@ div#debugInfo {
       }
 
       & img {
-        border: 1px solid var(--color-grey1);
+        border: 1px solid var(--color-lightgrey);
         padding: 1%;
         max-width: 98%;
         flex: 0 1 auto;
@@ -260,14 +271,135 @@ div#debugInfo {
         }
       }
     }
-  }
 
+    & pre {
+      max-width: 100%;
+      white-space: pre-wrap;
+    }
+
+    & ul.pill-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      & > li {
+        margin: 0.1em 0.3em;
+        padding: 0.1em 1em;
+        background-color: var(--color-blue);
+        display: inline-block;
+        border-radius: 1em;
+      }
+    }
+
+    & .lastModified {
+      margin-top: 2em;
+      font-size: smaller;
+    }
+
+    &.section-resume {
+      & > section {
+        padding: 2em 0;
+
+        &:first-child {
+          padding-top: 0;
+        }
+
+        & + section {
+          border-top: 4px solid var(--color-blue);
+        }
+
+        & > *:last-child {
+          margin-bottom: 0;
+          padding-bottom: 0;
+        }
+
+        & > h2 {
+          margin: 0;
+        }
+
+        & > div {
+          padding: 1em 0;
+
+          & + div {
+            border-top: 1px solid var(--color-grey);
+          }
+
+          & > *:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+          }
+
+          & > header {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 0 0 1em 0;
+
+            & h3 {
+              margin: 0;
+
+              & > a {
+                color: initial;
+                text-decoration: none;
+
+                &:hover {
+                  text-decoration: underline;
+                }
+              }
+            }
+
+            & .position,
+            & .roles {
+              font-weight: bold;
+            }
+
+            & .date-location {
+              text-align: right;
+            }
+          }
+        }
+
+        &.about {
+          & h1 {
+            display: none;
+          }
+
+          & .portrait {
+            float: left;
+            margin: 0 1em 1em 0;
+          }
+
+          & > dl {
+            clear: both;
+          }
+        }
+
+        &.references {
+          & blockquote {
+            margin: 0;
+            padding-left: 1em;
+            border-left: 2px solid var(--color-blue);
+          }
+        }
+      }
+
+      & dl {
+        & dt {
+          float: left;
+          clear: left;
+          width: 10em;
+        }
+      }
+    }
+  }
   & > footer {
     flex: 0 1 auto;
-    background: var(--color-orange3);
+    background: var(--color-blue);
     color: var(--color-white);
     padding: 1em var(--layout-page-gutter);
-    border-top: 5px solid var(--color-orange2);
+    border-top: 5px solid var(--color-yellow);
 
     @media (--only-taller-screens) {
       border-top-width: 20px;
@@ -286,18 +418,10 @@ div#debugInfo {
   }
 }
 
-@custom-media --only-taller-screens only screen and (min-height: 600px);
-@custom-media --narrow-screens only screen and (min-width: 480px);
-@custom-media --mediumwide-screens only screen and (min-width: 768px);
-@custom-media --superwide-screens only screen and (min-width: 1000px);
-
 @media (--narrow-screens) {
   :root {
     --layout-page-gutter: 2em;
   }
-}
-
-@media (--mediumwide-screens) {
 }
 
 /* Maximal Width */
@@ -370,35 +494,3 @@ div#debugInfo {
     page-break-after: avoid;
   }
 }
-
-/*
-.hidden {
-  display: none !important;
-  visibility: hidden;
-}
-
-.visuallyhidden {
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-
-.visuallyhidden.focusable::active,
-.visuallyhidden.focusable::focus {
-  clip: auto;
-  height: auto;
-  margin: 0;
-  overflow: visible;
-  position: static;
-  width: auto;
-}
-
-.invisible {
-  visibility: hidden;
-}
-*/

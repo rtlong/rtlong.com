@@ -3,6 +3,8 @@ title: Resume
 description: The resume of Ryan Taylor Long
 draft: true
 menu: "main"
+resume:
+  version: standard
 ---
 
-This content isn't used. Look at `layouts/resume/resume.ace`
+This is not the resume. If you're seeing this content, something's gone wrong and I'd like to know about it!
