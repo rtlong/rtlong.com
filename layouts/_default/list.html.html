@@ -1,12 +1,17 @@
 {{define "main"}}
-<h2>{{.Title}}</h2>
-{{.Content}}
+
+{{ with .Title }}
+  <h2>{{ . }}</h2>
+{{ end }}
+
+{{ .Content }}
 
 <ul>
-{{ range .Data.Pages }}
-{{ .Render "li" }}
-{{ end }}
+  {{ range .Data.Pages }}
+    {{ .Render "li" }}
+  {{ end }}
 </ul>
 
 <div class="templateSource">_default/list.html.html</div>
+
 {{end}}

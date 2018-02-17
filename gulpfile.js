@@ -222,7 +222,8 @@ function validateHtml() {
     }))
     .pipe(validatorReport())
 }
-task('validate', series(startVnu, validateHtml))
+// task('validate', series(startVnu, validateHtml))
+task('validate', validateHtml)
 
 watchTask('watch-css',
           [patterns.css, '.stylelintrc'],
@@ -264,7 +265,7 @@ task('default',
        'build',
        parallel(
          startServer,
-         startVnu,
+         // startVnu,
        ),
        parallel(
          'watch-js',
