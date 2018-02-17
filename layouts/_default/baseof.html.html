@@ -32,6 +32,7 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="/css/{{ index $assets "main.css" }}">
     <script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+    <script defer src="/js/{{ index $assets "main.js" }}"></script>
   </head>
   <body>
     {{ if getenv "DEV" }}{{ partial "contentInfo.html" . }}{{ end }}
@@ -71,10 +72,5 @@
     </div>
 
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
-            crossorigin="anonymous"></script>
-
-    <script src="/js/{{ index $assets "main.js" }}"></script>
   </body>
 </html>

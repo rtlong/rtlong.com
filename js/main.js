@@ -1,13 +1,10 @@
 function updateDebugInfo() {
-  var w = $(window)
+  var el = document.getElementById('debugInfo')
 
-  $('#debugInfo').html(w.width() + 'x' + w.height())
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+  el.innerHTML = `W:${width}px H:${height}px`
 }
 
-$(() => {
-  var div = $('#debugInfo')
-  if (div.length >= 1) {
-    updateDebugInfo()
-    $(window).resize(updateDebugInfo)
-  }
-})
+window.addEventListener('resize', updateDebugInfo)
+updateDebugInfo();
