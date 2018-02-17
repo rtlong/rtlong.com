@@ -34,6 +34,8 @@
     "gulp-babel": "^7.0.1",
     "gulp-hash": "^4.2.2",
     "gulp-hash-filename": "^1.2.0",
+    "gulp-html": "^0.4.7",
+    "gulp-html-validator": "0.0.5",
     "gulp-postcss": "^7.0.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-stylelint": "^6.0.0",

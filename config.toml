@@ -2,9 +2,9 @@ baseURL = "https://rtlong.com" # hostname (and path) to the root, e.g. http://sp
 buildDrafts = true # include content marked as draft
 buildFuture = false # include content with publishdate in the future
 buildExpired = false # include content already expired
-relativeURLs = true # enable this to make all relative URLs relative to content root. Note that this does not affect absolute URLs.
+relativeURLs = false # enable this to make all relative URLs relative to content root. Note that this does not affect absolute URLs.
 canonifyURLs = false
-debug = true
+debug = false
 disableLiveReload = false
 disableRSS = false # Do not build RSS files
 disableSitemap = false # Do not build Sitemap file
@@ -17,13 +17,19 @@ disableKinds = [] # Allows you to disable all page types and will render nothing
 disablePathToLower = false # Do not make the url/path to lowercase
 enableEmoji = true # Enable Emoji emoticons support for page content; see emoji-cheat-sheet.com
 enableMissingTranslationPlaceholders = false # Show a placeholder instead of the default value or an empty string if a translation is missing
-googleAnalytics = "" # google analytics tracking id
+ignoreFiles = [
+  "README\\.md$",
+  "resume/.*\\.js",
+  "resume/node_modules",
+  "resume/package\\..+",
+  "resume/scripts/",
+]
 metaDataFormat = "yaml" # "toml","yaml", or "json"
 staticDir = ["static", "asset-bundles"]
 # theme = "rtlong"
 title = "RTLong"
 uglyURLs = false # if true, use /filename.html instead of /filename/
-verbose = true # verbose output
+verbose = false # verbose output
 verboseLog = true # verbose logging
 watch = true # watch filesystem for changes and recreate as needed
 # End built-ins
@@ -47,33 +53,30 @@ main = "Ryan Taylor Long"
 avatarURL = "https://gravatar.com/avatar/053e38be1bd8b18bf8b1c26e11a797ff?s=256"
 email = "hello@rtlong.com"
 name = "Ryan Long"
-logoIcon = "fa-paper-plane"
 tagline = "Software Engineer - Digital Nomad"
 
-[params.header]
-title = "Ryan Long"
-logoImageURL = "signature.svg"
-shortBio = "Software Engineer. Digital Nomad."
+[params.resume]
+dateFormat = "January 2006"
 
-[[params.social]]
-medium = "Github"
-icon = "github"
-link = "https://github.com/rtlong"
+# [[params.social]]
+# medium = "Github"
+# icon = "github"
+# link = "https://github.com/rtlong"
 
-[[params.social]]
-medium = "LinkedIn"
-icon = "linkedin"
-link = "https://www.linkedin.com/in/rtlong"
+# [[params.social]]
+# medium = "LinkedIn"
+# icon = "linkedin"
+# link = "https://www.linkedin.com/in/rtlong"
 
-[[params.social]]
-medium = "Instagram"
-icon = "instagram"
-link = "https://www.instagram.com/_rtlong/"
+# [[params.social]]
+# medium = "Instagram"
+# icon = "instagram"
+# link = "https://www.instagram.com/_rtlong/"
 
-[[params.social]]
-medium = "Email"
-icon = "envelope"
-link = "mailto:hello@rtlong.com"
+# [[params.social]]
+# medium = "Email"
+# icon = "envelope"
+# link = "mailto:hello@rtlong.com"
 
 # [[menu.main]]
 # name = "Contact"
