@@ -1,0 +1,22 @@
+<h1> {{.title}} </h1>
+<ul>{{range $k, $v := .data}}
+  <li>
+    {{$k}} :
+    {{ if $.secondLevel }}
+    <ul>{{ range $kk, $vv := $v }}
+      <li>
+        {{$kk}} :
+        {{ if ne $kk "node_modules" }}
+          {{ highlight ($vv | printf "%#v") "go" "" }}
+        {{else}}
+          skipped
+        {{end}}
+      </li>
+    {{end}}
+    </ul>
+    {{ else }}
+    {{ highlight ($v | printf "%#v") "go" "" }}
+    {{ end }}
+  </li>
+{{end}}
+</ul>
