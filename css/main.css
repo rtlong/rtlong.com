@@ -183,7 +183,7 @@ div#debugInfo {
     }
   }
 
-  & > div.main {
+  & > main {
     flex: 1 1 auto;
     padding: 2em var(--layout-page-gutter);
 
