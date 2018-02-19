@@ -23,33 +23,30 @@
     "not ie_mob < 12"
   ],
   "homepage": "https://github.com/rtlong/rtlong.com#readme",
-  "dependencies": {
-    "ansi-colors": "^1.0.1",
-    "ansicolors": "^0.3.2",
-    "autoprefixer": "^7.2.5",
+  "dependencies": {},
+  "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "chalk": "^2.3.1",
     "colorguard": "^1.2.1",
     "cssnano": "^4.0.0-rc.2",
     "gulp": "^4.0.0",
     "gulp-babel": "^7.0.1",
+    "gulp-connect": "^5.2.0",
     "gulp-hash": "^4.2.2",
-    "gulp-hash-filename": "^1.2.0",
-    "gulp-html": "^0.4.7",
     "gulp-html-validator": "0.0.5",
+    "gulp-htmlmin": "^4.0.0",
     "gulp-postcss": "^7.0.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-stylelint": "^6.0.0",
+    "kexec": "^3.0.0",
+    "livereload-js": "^2.3.0",
     "normalize.css": "^7.0.0",
-    "postcss": "^6.0.17",
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^11.0.0",
     "stylelint": "^8.4.0",
-    "stylelint-config-standard": "^18.0.0"
-  },
-  "devDependencies": {
-    "gulp-connect": "^5.2.0",
-    "kexec": "^3.0.0",
-    "livereload-js": "^2.3.0"
+    "stylelint-config-standard": "^18.0.0",
+    "through2": "^2.0.3",
+    "vnu-jar": "^17.11.1"
   }
 }

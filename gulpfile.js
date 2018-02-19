@@ -1,9 +1,10 @@
-// const fs = require('fs')
 const path = require('path')
 const { spawn } = require('child_process')
 
 const kexec = require('kexec')
-const colors = require('ansi-colors')
+const vnuJar = require('vnu-jar')
+const through2 = require('through2')
+const chalk = require('chalk')
 
 const gulp = require('gulp')
 const { task, src, dest, series, parallel } = gulp
@@ -16,16 +17,12 @@ const stylelint = require('gulp-stylelint')
 const gulpHash = require('gulp-hash')
 const gulpConnect = require('gulp-connect')
 const gulpHtmlValidator = require('gulp-html-validator')
+const gulpHtmlMin = require('gulp-htmlmin')
 
 // PostCSS plugins
 const cssnano = require('cssnano')
-const colorguard = require('colorguard')
 const postcssCssnext = require('postcss-cssnext')
 const postcssImport = require('postcss-import')
-
-const vnuJar = require('vnu-jar')
-const through2 = require('through2')
-const C = require('ansicolors')
 
 const patterns = {
   assetManifest: 'data/assets.json',
@@ -103,19 +100,19 @@ const serverOpts = {
   root: 'public',
 }
 
+let livereload
 function startServer(done) {
-  return gulpConnect.server(serverOpts, () => {
+  let app = gulpConnect.server(serverOpts, () => {
     // exec(`open http://${serverOpts.host}:${serverOpts.port}`)
     done()
   })
+  livereload = app.lr
+  return app
 }
 task(startServer)
 
 function css() {
   var plugins = [
-    colorguard({
-      threshold: 5,
-    }),
     postcssImport,
     postcssCssnext({
       features: {
@@ -132,18 +129,9 @@ function css() {
   }
 
   return src(patterns.css)
-    .pipe(gulpHash())
-    .pipe(stylelint({
-      reporters: [
-        {
-          formatter: 'string',
-          console: true
-        },
-      ],
-      failAfterError: false,
-    }))
     .pipe(sourcemaps.init())
     .pipe(postcss(plugins))
+    .pipe(gulpHash())
     .pipe(sourcemaps.write('.'))
     .pipe(dest('asset-bundles/css/'))
     .pipe(gulpHash.manifest(patterns.assetManifest, {
@@ -153,6 +141,20 @@ function css() {
     .pipe(dest('.'))
 }
 task(css)
+
+function csslint() {
+  return src(patterns.css)
+    .pipe(stylelint({
+      reporters: [
+        {
+          formatter: 'string',
+          console: true
+        },
+      ],
+      failAfterError: false,
+    }))
+}
+task(csslint)
 
 function js() {
   return src(patterns.js)
@@ -192,7 +194,8 @@ function hugoBuild(done) {
     done()
   })
 }
-task(hugoBuild)
+task('hugoBuild',
+     series(hugoBuild, htmlmin))
 
 const vnuPort = 8888
 let vnuPid = null
@@ -225,10 +228,24 @@ function validateHtml() {
 // task('validate', series(startVnu, validateHtml))
 task('validate', validateHtml)
 
+function htmlmin() {
+  return src(patterns.publicHtml)
+    .pipe(gulpHtmlMin({
+      collapseWhitespace: true,
+      collapseBooleanAttributes: true,
+      decodeEntities: true,
+      removeEmptyAttributes: true,
+      removeComments: true
+    }))
+    .pipe(dest('public/'))
+}
+task(htmlmin)
+
 watchTask('watch-css',
           [patterns.css, '.stylelintrc'],
           series(
             css,
+            csslint,
           ))
 
 watchTask('watch-js',
@@ -240,13 +257,13 @@ watchTask('watch-js',
 
 watchTask('watch-hugo',
           patterns.hugo,
-          hugoBuild)
+          series('hugoBuild'))
 
 watchTask('watch-public',
           [patterns.public],
           parallel(
             liveReload,
-            'validate'
+            'validate',
           ))
 
 watchTask('watch-gulp-restart',
@@ -258,7 +275,9 @@ task('build', series(
     css,
     js,
     jsVendored),
-  hugoBuild))
+  'hugoBuild',
+  'validate',
+))
 
 task('default',
      series(
@@ -297,7 +316,7 @@ function hugoEnv() {
 
 // if TRUE: this build targets *local* dev workflow; FALSE: build for deployment
 function isDev() {
-  return process.env.NODE_ENV !== 'production'
+  return (process.env.NODE_ENV !== 'production')
 }
 
 // if TRUE: build targets staging; FALSE: build targets production
@@ -310,11 +329,7 @@ function validatorReport() {
     const data = JSON.parse(file.contents.toString())
     // console.log(data)
     data.messages.forEach(msg => {
-      console.log(
-        C.yellow(path.relative(process.cwd(), file.path)),
-        C.green(`${msg.firstLine || ''}:${msg.lastLine || ''}`),
-        C.white(msg.message),
-      )
+      console.log(chalk`{yellow ${path.relative(process.cwd(), file.path)}} {green ${msg.firstLine || ''}:${msg.lastLine || ''}} ${msg.message}`)
     })
     callback(null, file)
   })
