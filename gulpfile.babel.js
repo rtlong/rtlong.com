@@ -7,14 +7,14 @@ import kexec from 'kexec'
 import vnuJar from 'vnu-jar'
 import through2 from 'through2'
 import chalk from 'chalk'
-import gulp, { task, src, dest, series, parallel } from 'gulp'
+import BrowserSync from 'browser-sync'
+import gulp, { task, src, dest, series, parallel, watch } from 'gulp'
 
 // Gulp plugins
 import babel from 'gulp-babel'
 import postcss from 'gulp-postcss'
 import sourcemaps from 'gulp-sourcemaps'
 import stylelint from 'gulp-stylelint'
-import gulpConnect from 'gulp-connect'
 import gulpHash from 'gulp-hash'
 import gulpHtmlValidator from 'gulp-html-validator'
 import gulpHtmlMin from 'gulp-htmlmin'
@@ -24,11 +24,20 @@ import cssnano from 'cssnano'
 import postcssCssnext from 'postcss-cssnext'
 import postcssImport from 'postcss-import'
 
-const patterns = {
+const browserSync = BrowserSync.create()
+
+const paths = {
+  hugoOut: 'tmp/hugo-out/',
+  dist: 'public/',
   assetManifest: 'data/assets.json',
+}
+paths.distJs = path.join(paths.dist, 'js')
+paths.distCss = path.join(paths.dist, 'css')
+
+const patterns = {
   css: ['css/**/*.css'],
   js: ['js/**/*.js'],
-  jsVendored: ['node_modules/livereload-js/dist/livereload.js'],
+  jsVendored: ['js/vendor/**/*.js'],
   hugo: [
     'config.*',
     'content/**/*',
@@ -36,7 +45,6 @@ const patterns = {
     'data/*.json',
     'data/resume/*.yml',
     'static/**/*',
-    'asset-bundles/**/*',
   ],
   gulp: [
     __filename
@@ -46,73 +54,34 @@ const patterns = {
     'package.json',
     'package-lock.json',
   ],
-  public: ['public/**/*'],
-  publicHtml: ['public/**/*.html']
+  public: [path.join(paths.dist, '/**/*')],
+  publicHtml: [path.join(paths.dist, '/**/*.html')],
+  hugoOut: [path.join(paths.hugoOut, '/**/*')],
+  hugoOutHtml: [path.join(paths.hugoOut, '/**/*.html')],
 }
 
-const watchers = new Set()
-const readyWatchers = new Set()
-// const watchedPaths = new Set()
-
-function watchTask(name, patterns, tasks) {
-  watchers.add(name)
-  return task(name, () => {
-    let w = gulp.watch(patterns, tasks)
-    if (name !== 'watch-public') {
-      w.on('change', f => console.log('CHANGE', name, f))
-      w.on('unlink', f => console.log('UNLINK', name, f))
-      w.on('add', f => console.log('CREATE', name, f))
-    }
-    w.on('ready', function () {
-      // console.log(`ready from watcher: ${name}`)
-      // let watched = this.getWatched()
-      // for (let dir in watched) {
-      //   watched[dir].forEach(f => {
-      //     watchedPaths.add(path.relative(process.cwd(), path.join(dir, f)))
-      //   })
-      // }
-      readyWatchers.add(name)
-      for (let name of watchers.values()) {
-        if (!readyWatchers.has(name)) return
-      }
-      console.log('ALL watchers are ready.')
-      // fs.writeFileSync('watchedFiles.txt', Array.from(watchedPaths.values()).sort().join('\n'))
-    })
-    return w
-  })
-}
-
-function liveReload() {
-  return src(patterns.public)
-    .pipe(gulpConnect.reload())
-}
-
-function gulpRestart() {
+task('gulp:restart', function gulpRestart() {
   console.log('Gulpfile or node_modules changed. Gulp restarting.')
   if (vnuPid) process.kill(vnuPid)
   kexec(process.argv0, process.argv.slice(1))
-}
+})
 
-const serverOpts = {
-  livereload: true,
-  port: '1313',
-  host: '0.0.0.0',
-  root: 'public',
-}
-
-let livereload
-function startServer(done) {
-  let app = gulpConnect.server(serverOpts, () => {
-    // exec(`open http://${serverOpts.host}:${serverOpts.port}`)
-    done()
+task('browsersync:start', function browserSyncStart(done) {
+  browserSync.init({
+    server: paths.dist,
+    logConnections: true,
+    open: false,
   })
-  livereload = app.lr
-  return app
-}
-task(startServer)
+  done()
+})
 
-function css() {
-  var plugins = [
+task('browsersync:reload', function browserSyncReload() {
+  return src(patterns.public)
+    .pipe(browserSync.stream())
+})
+
+task('css', function css() {
+  var postcssPlugins = [
     postcssImport,
     postcssCssnext({
       features: {
@@ -122,7 +91,7 @@ function css() {
   ]
 
   if (!isDev()) {
-    plugins.push(cssnano({
+    postcssPlugins.push(cssnano({
       preset: 'default',
       safe: true,
     }))
@@ -130,19 +99,18 @@ function css() {
 
   return src(patterns.css)
     .pipe(sourcemaps.init())
-    .pipe(postcss(plugins))
+    .pipe(postcss(postcssPlugins))
     .pipe(gulpHash())
     .pipe(sourcemaps.write('.'))
-    .pipe(dest('asset-bundles/css/'))
+    .pipe(dest(paths.distCss))
     .pipe(gulpHash.manifest(patterns.assetManifest, {
       deleteOld: true,
-      sourceDir: path.join(__dirname, 'asset-bundles/css/'),
+      sourceDir: path.join(__dirname, paths.distCss),
     }))
-    .pipe(dest('.'))
-}
-task(css)
+    // .pipe(dest('.'))
+})
 
-function csslint() {
+task('css:lint', function csslint() {
   return src(patterns.css)
     .pipe(stylelint({
       reporters: [
@@ -153,31 +121,28 @@ function csslint() {
       ],
       failAfterError: false,
     }))
-}
-task(csslint)
+})
 
-function js() {
+task('js', function js() {
   return src(patterns.js)
       .pipe(gulpHash())
       .pipe(sourcemaps.init())
       .pipe(babel())
       .pipe(sourcemaps.write('.'))
-      .pipe(dest('asset-bundles/js/'))
-      .pipe(gulpHash.manifest(patterns.assetManifest, {
+      .pipe(dest(paths.distJs))
+      .pipe(gulpHash.manifest(paths.assetManifest, {
         deleteOld: true,
-        sourceDir: path.join(__dirname, 'asset-bundles/js/'),
+        sourceDir: path.join(__dirname, paths.distJs),
       }))
       .pipe(dest('.'))
-}
-task(js)
+})
 
-function jsVendored() {
+task('js:vendored', function jsVendored() {
   return src(patterns.jsVendored)
-    .pipe(dest('asset-bundles/js/vendor/'))
-}
-task(jsVendored)
+    .pipe(dest('public/js/vendor/'))
+})
 
-function hugoBuild(done) {
+task('hugo:build', function hugoBuild(done) {
   var args = []
   var baseURL = hugoBaseURL()
   if (baseURL) args = args.concat(['--baseURL', baseURL])
@@ -189,47 +154,43 @@ function hugoBuild(done) {
   })
   hugo.on('close', (code) => {
     if (code !== 0) {
-      console.log(colors.red(`Hugo completed with code ${code}`))
+      console.log(chalk.red(`Hugo completed with code ${code}`))
     }
     done()
   })
-}
-task('hugoBuild',
-     series(hugoBuild, htmlmin))
+})
 
 const vnuPort = 8888
 let vnuPid = null
-function startVnu(done) {
-  if (vnuPid) return done()
-  const ready = 'oejs.Server:main: Started'
-  const proc = spawn('java', ['-cp', vnuJar, 'nu.validator.servlet.Main', vnuPort])
-  vnuPid = proc.pid
-  proc.on('close', (code) => {
-    console.log(`vnu.jar process exited with code ${code}`)
-  })
-  proc.stderr.on('data', data => {
-    // console.log(data.toString())
-    if (data.includes(ready)) done()
-  })
-  proc.stdout.on('data', data => {
-    // console.log(data.toString())
-    if (data.includes(ready)) done()
-  })
-}
-task(startVnu)
+// function startVnu(done) {
+//   if (vnuPid) {
+//     done()
+//     return
+//   }
+//   const ready = 'oejs.Server:main: Started'
+//   const proc = spawn('java', ['-cp', vnuJar, 'nu.validator.servlet.Main', vnuPort])
+//   vnuPid = proc.pid
+//   proc.on('close', (code) => {
+//     console.log(`vnu.jar process exited with code ${code}`)
+//   })
+//   proc.stderr.on('data', data => {
+//     if (data.includes(ready)) done()
+//   })
+//   proc.stdout.on('data', data => {
+//     if (data.includes(ready)) done()
+//   })
+// }
 
-function validateHtml() {
+task('validateHtml', function validateHtml() {
   return src(patterns.publicHtml)
     .pipe(gulpHtmlValidator({
       validator: `http://localhost:${vnuPort}/`
     }))
     .pipe(validatorReport())
-}
-// task('validate', series(startVnu, validateHtml))
-task('validate', validateHtml)
+})
 
-function htmlmin() {
-  return src(patterns.publicHtml)
+task('hugo:post', function hugoPost() {
+  return src(patterns.hugoOutHtml)
     .pipe(gulpHtmlMin({
       collapseWhitespace: true,
       collapseBooleanAttributes: true,
@@ -237,69 +198,51 @@ function htmlmin() {
       removeEmptyAttributes: true,
       removeComments: true
     }))
-    .pipe(dest('public/'))
-}
-task(htmlmin)
+    .pipe(dest(paths.dist))
+})
 
-watchTask('watch-css',
-          [patterns.css, '.stylelintrc'],
-          series(
-            css,
-            csslint,
-          ))
+task('watch', function setupWatch(done) {
+       watch([patterns.css, '.stylelintrc'],
+             series('css', 'css:lint'))
 
-watchTask('watch-js',
-          [patterns.js, patterns.jsVendored, patterns.node, '.babelrc'],
-          parallel(
-            js,
-            jsVendored),
-         )
+       watch([patterns.js, patterns.jsVendored, patterns.node, '.babelrc'],
+             parallel('js', 'js:vendored')) // eslint here too?
 
-watchTask('watch-hugo',
-          patterns.hugo,
-          series('hugoBuild'))
+       watch(patterns.hugo,
+             parallel('hugo:build'))
 
-watchTask('watch-public',
-          [patterns.public],
-          parallel(
-            liveReload,
-            'validate',
-          ))
+       watch(patterns.public,
+             parallel('browsersync:reload', 'validateHtml'))
 
-watchTask('watch-gulp-restart',
-          [patterns.gulp, patterns.node],
-          gulpRestart)
+       watch([patterns.gulp, patterns.node],
+             parallel('gulp:restart'))
+
+       done()
+     })
 
 task('build', series(
   parallel(
-    css,
-    js,
-    jsVendored),
-  'hugoBuild',
-  'validate',
+    'css',
+    'js',
+    'js:vendored'),
+  'hugo:build',
+  'validateHtml'
 ))
 
-task('default',
-     series(
-       'build',
-       parallel(
-         startServer,
-         // startVnu,
-       ),
-       parallel(
-         'watch-js',
-         'watch-css',
-         'watch-hugo',
-         'watch-public',
-         'watch-gulp-restart')))
+task('default', series(
+  'build',
+  'browsersync:start',
+  'watch'))
+
 
 /// Helpers ///
 
 function hugoBaseURL() {
   if (isDev()) {
-    return `http://${serverOpts.host}:${serverOpts.port}`
+    return `http://0.0.0.0:3000`
   } else {
     return false
+
   }
 }
 
