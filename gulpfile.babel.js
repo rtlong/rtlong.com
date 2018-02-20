@@ -1,28 +1,28 @@
-const path = require('path')
-const { spawn } = require('child_process')
+// eslint indent: off //
 
-const kexec = require('kexec')
-const vnuJar = require('vnu-jar')
-const through2 = require('through2')
-const chalk = require('chalk')
+import path from 'path'
+import { spawn } from 'child_process'
 
-const gulp = require('gulp')
-const { task, src, dest, series, parallel } = gulp
+import kexec from 'kexec'
+import vnuJar from 'vnu-jar'
+import through2 from 'through2'
+import chalk from 'chalk'
+import gulp, { task, src, dest, series, parallel } from 'gulp'
 
 // Gulp plugins
-const babel = require('gulp-babel')
-const postcss = require('gulp-postcss')
-const sourcemaps = require('gulp-sourcemaps')
-const stylelint = require('gulp-stylelint')
-const gulpHash = require('gulp-hash')
-const gulpConnect = require('gulp-connect')
-const gulpHtmlValidator = require('gulp-html-validator')
-const gulpHtmlMin = require('gulp-htmlmin')
+import babel from 'gulp-babel'
+import postcss from 'gulp-postcss'
+import sourcemaps from 'gulp-sourcemaps'
+import stylelint from 'gulp-stylelint'
+import gulpConnect from 'gulp-connect'
+import gulpHash from 'gulp-hash'
+import gulpHtmlValidator from 'gulp-html-validator'
+import gulpHtmlMin from 'gulp-htmlmin'
 
 // PostCSS plugins
-const cssnano = require('cssnano')
-const postcssCssnext = require('postcss-cssnext')
-const postcssImport = require('postcss-import')
+import cssnano from 'cssnano'
+import postcssCssnext from 'postcss-cssnext'
+import postcssImport from 'postcss-import'
 
 const patterns = {
   assetManifest: 'data/assets.json',
@@ -39,7 +39,7 @@ const patterns = {
     'asset-bundles/**/*',
   ],
   gulp: [
-    'gulpfile.js',
+    __filename
   ],
   node: [
     '/node_modules/*/',
