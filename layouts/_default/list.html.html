@@ -6,11 +6,11 @@
 
 {{ .Content }}
 
-<ul>
+<!-- <ul> -->
   {{ range .Data.Pages }}
-    {{ .Render "li" }}
+    {{ .Render "summary" }}
   {{ end }}
-</ul>
+  <!-- </ul> -->
 
 <div class="templateSource">_default/list.html.html</div>
 

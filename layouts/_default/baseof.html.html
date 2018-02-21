@@ -18,10 +18,10 @@
     <link rel="manifest" href="/site.webmanifest">
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00a0b0">
     <!-- } -->
-    <link rel="stylesheet" href="/css/{{ index $assets "main.css" }}">
+    <link rel="stylesheet" href="/{{ index $assets "main.css" }}">
     <title>{{ $.Scratch.Get "title" }}</title>
-    <script async src="/js/vendor/modernizr-custom.js"></script>
-    <script defer src="/js/{{ index $assets "main.js" }}"></script>
+    <script async src="/{{ index $assets "modernizr-custom.js" }}"></script>
+    <script defer src="/{{ index $assets "main.js" }}"></script>
     <noscript>
       <style>
        .noscript { display: block; }

@@ -1,4 +1,4 @@
-<div id="contentInfo">
+<div id="contentInfo" aria-hidden="true">
   <div class="{{ with .Description }}{{else}}error{{end}}">
     .Description: <code>{{ .Description }}</code>
   </div>
@@ -18,7 +18,7 @@
   {{ end }}
 </div>
 
-<div id="debugInfo"></div>
+<div id="debugInfo" aria-hidden="true"></div>
 
 <script>
  window.hugoPage = {{ . | jsonify | safeJS }};

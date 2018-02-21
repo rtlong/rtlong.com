@@ -17,7 +17,12 @@ import sourcemaps from 'gulp-sourcemaps'
 import stylelint from 'gulp-stylelint'
 import gulpHash from 'gulp-hash'
 import gulpHtmlValidator from 'gulp-html-validator'
+import gulpFilter from 'gulp-filter'
 import gulpHtmlMin from 'gulp-htmlmin'
+import gulpRev from 'gulp-rev'
+import gulpCached from 'gulp-cached'
+import gulpEslint from 'gulp-eslint'
+import gulpPrint from 'gulp-print'
 
 // PostCSS plugins
 import cssnano from 'cssnano'
@@ -29,31 +34,33 @@ const browserSync = BrowserSync.create()
 const paths = {
   hugoOut: 'tmp/hugo-out/',
   dist: 'public/',
-  assetManifest: 'data/assets.json',
+  dataDir: 'data',
 }
-paths.distJs = path.join(paths.dist, 'js')
-paths.distCss = path.join(paths.dist, 'css')
+paths.assetManifest = path.join(paths.dataDir, 'assets.json')
 
 const patterns = {
   css: ['css/**/*.css'],
-  js: ['js/**/*.js'],
+  js: [
+    'js/**/*.js',
+    '!js/vendor{,/**}',
+  ],
   jsVendored: ['js/vendor/**/*.js'],
-  hugo: [
+  hugoInputs: [
     'config.*',
     'content/**/*',
     'layouts/**/*',
     'data/*.json',
     'data/resume/*.yml',
-    'static/**/*',
   ],
   gulp: [
-    __filename
+    __filename,
   ],
   node: [
     '/node_modules/*/',
     'package.json',
     'package-lock.json',
   ],
+  static: ['static/**/*'],
   public: [path.join(paths.dist, '/**/*')],
   publicHtml: [path.join(paths.dist, '/**/*.html')],
   hugoOut: [path.join(paths.hugoOut, '/**/*')],
@@ -71,12 +78,18 @@ task('browsersync:start', function browserSyncStart(done) {
     server: paths.dist,
     logConnections: true,
     open: false,
-  })
-  done()
+  }, done)
+})
+
+task('browsersync:seedCache', function browserSyncReload() {
+  return src(patterns.public)
+    .pipe(gulpCached('browsersync'))
 })
 
 task('browsersync:reload', function browserSyncReload() {
   return src(patterns.public)
+    .pipe(gulpCached('browsersync'))
+    .pipe(gulpFilter(f => !f.isDirectory()))
     .pipe(browserSync.stream())
 })
 
@@ -100,14 +113,14 @@ task('css', function css() {
   return src(patterns.css)
     .pipe(sourcemaps.init())
     .pipe(postcss(postcssPlugins))
-    .pipe(gulpHash())
+    .pipe(gulpRev())
     .pipe(sourcemaps.write('.'))
-    .pipe(dest(paths.distCss))
-    .pipe(gulpHash.manifest(patterns.assetManifest, {
-      deleteOld: true,
-      sourceDir: path.join(__dirname, paths.distCss),
+    .pipe(dest(paths.dist))
+    .pipe(gulpRev.manifest({
+      path: paths.assetManifest,
+      merge: true,
     }))
-    // .pipe(dest('.'))
+    .pipe(dest('.'))
 })
 
 task('css:lint', function csslint() {
@@ -125,39 +138,81 @@ task('css:lint', function csslint() {
 
 task('js', function js() {
   return src(patterns.js)
-      .pipe(gulpHash())
-      .pipe(sourcemaps.init())
-      .pipe(babel())
-      .pipe(sourcemaps.write('.'))
-      .pipe(dest(paths.distJs))
-      .pipe(gulpHash.manifest(paths.assetManifest, {
-        deleteOld: true,
-        sourceDir: path.join(__dirname, paths.distJs),
-      }))
-      .pipe(dest('.'))
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .pipe(gulpRev())
+    .pipe(sourcemaps.write('.'))
+    .pipe(dest(paths.dist))
+    .pipe(gulpRev.manifest({
+      path: paths.assetManifest,
+      merge: true,
+    }))
+    .pipe(dest('.'))
 })
 
 task('js:vendored', function jsVendored() {
   return src(patterns.jsVendored)
-    .pipe(dest('public/js/vendor/'))
+    .pipe(gulpRev())
+    .pipe(dest(paths.dist))
+    .pipe(gulpRev.manifest({
+      path: paths.assetManifest,
+      merge: true,
+    }))
+    .pipe(dest('.'))
+})
+
+task('static', function jsVendored() {
+  return src(patterns.static)
+    .pipe(dest(paths.dist))
+    .pipe(gulpRev())
+    // .pipe(browserSync.stream())
+    .pipe(dest(paths.dist))
+    .pipe(gulpRev.manifest({
+      path: paths.assetManifest,
+      merge: true,
+    }))
+    .pipe(dest('.'))
 })
 
 task('hugo:build', function hugoBuild(done) {
   var args = []
   var baseURL = hugoBaseURL()
   if (baseURL) args = args.concat(['--baseURL', baseURL])
-  console.log('Running Hugo to regenerate the site.')
-  console.log('hugo', args.join(' '))
+
+  browserSync.notify(`Building...`)
+  // console.log('Running Hugo to regenerate the site.')
+  // console.log('hugo', args.join(' '))
+
   let hugo = spawn('hugo', args, {
     env: hugoEnv(),
     stdio: 'inherit',
   })
+
   hugo.on('close', (code) => {
     if (code !== 0) {
-      console.log(chalk.red(`Hugo completed with code ${code}`))
+      console.log(chalk.red(`Hugo failed with code ${code}`))
+      browserSync.notify(`<span style="color: red">Hugo failed with code ${code}</span><img src="data:image/gif;base64,ba2" onerror="console.error('Hugo failed with code ${code}');this.parentNode.removeChild(this);" />`, 30000)
+    } else {
+      browserSync.notify(`Built.`, 1000)
     }
     done()
   })
+})
+
+task('hugo:post', function hugoPost() {
+  let filterHtml = gulpFilter('**/*.html')
+  return src(patterns.hugoOut)
+    .pipe(dest(paths.dist))
+    .pipe(filterHtml)
+    // .pipe(browserSync.stream())
+    .pipe(gulpHtmlMin({
+      collapseWhitespace: true,
+      collapseBooleanAttributes: true,
+      decodeEntities: true,
+      removeEmptyAttributes: true,
+      removeComments: true
+    }))
+    .pipe(dest(paths.dist))
 })
 
 const vnuPort = 8888
@@ -189,49 +244,53 @@ task('validateHtml', function validateHtml() {
     .pipe(validatorReport())
 })
 
-task('hugo:post', function hugoPost() {
-  return src(patterns.hugoOutHtml)
-    .pipe(gulpHtmlMin({
-      collapseWhitespace: true,
-      collapseBooleanAttributes: true,
-      decodeEntities: true,
-      removeEmptyAttributes: true,
-      removeComments: true
-    }))
-    .pipe(dest(paths.dist))
+task('watch', function setupWatch(done) {
+  watch([patterns.css, '.stylelintrc'],
+        parallel('css', 'css:lint'))
+
+  watch([patterns.js, patterns.jsVendored, '.babelrc'],
+        parallel('js', 'js:vendored')) // eslint here too?
+
+  watch([patterns.static],
+        parallel('static'))
+
+  watch(patterns.hugoInputs,
+        parallel('hugo:build'))
+
+  watch(patterns.hugoOut, { delay: 500 },
+        parallel('hugo:post'))
+
+  watch(patterns.public,
+        parallel('browsersync:reload', 'validateHtml'))
+
+  watch([patterns.gulp, patterns.node],
+        parallel('gulp:restart'))
+
+  done()
 })
 
-task('watch', function setupWatch(done) {
-       watch([patterns.css, '.stylelintrc'],
-             series('css', 'css:lint'))
-
-       watch([patterns.js, patterns.jsVendored, patterns.node, '.babelrc'],
-             parallel('js', 'js:vendored')) // eslint here too?
-
-       watch(patterns.hugo,
-             parallel('hugo:build'))
-
-       watch(patterns.public,
-             parallel('browsersync:reload', 'validateHtml'))
-
-       watch([patterns.gulp, patterns.node],
-             parallel('gulp:restart'))
-
-       done()
-     })
+// TODO: robots.txt is clobbered back and forth by 'static' and 'hugo:build'
+// TODO: gulp's and hugo's compiling in-progress and error messages in browser
 
 task('build', series(
   parallel(
     'css',
-    'js',
-    'js:vendored'),
+    'css:lint'
+  ),
+  'js',
+  'js:vendored',
+  'static',
   'hugo:build',
+  'hugo:post',
   'validateHtml'
 ))
 
 task('default', series(
-  'build',
-  'browsersync:start',
+  parallel(
+    'build',
+    'browsersync:start'
+  ),
+  'browsersync:seedCache',
   'watch'))
 
 

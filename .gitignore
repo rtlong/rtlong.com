@@ -2,3 +2,4 @@
 /node_modules/
 asset-bundles/
 dist/
+tmp/

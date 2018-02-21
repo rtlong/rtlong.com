@@ -25,7 +25,8 @@ ignoreFiles = [
   "resume/scripts/",
 ]
 metaDataFormat = "yaml" # "toml","yaml", or "json"
-staticDir = ["static", "asset-bundles"]
+staticDir = []
+publishDir = "tmp/hugo-out"
 # theme = "rtlong"
 title = "RTLong"
 uglyURLs = false # if true, use /filename.html instead of /filename/

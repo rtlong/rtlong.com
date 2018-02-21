@@ -9,10 +9,10 @@
   --color-white: white;
   --color-black: black;
   --color-blue: #00a0b0;
-  --color-brown: #6A4A3C;
-  --color-red: #CC333F;
-  --color-orange: #EB6841;
-  --color-yellow: #EDC951;
+  --color-brown: #6a4a3c;
+  --color-red: #cc333f;
+  --color-orange: #eb6841;
+  --color-yellow: #edc951;
   --color-lightgrey: #cccccc;
   --color-medgrey: #777777;
   --color-shadow-grey: var(--color-lightgrey);
@@ -394,6 +394,7 @@ div#debugInfo {
       }
     }
   }
+
   & > footer {
     flex: 0 1 auto;
     background: var(--color-blue);
