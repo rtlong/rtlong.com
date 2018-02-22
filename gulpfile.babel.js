@@ -18,16 +18,17 @@ import babel from 'gulp-babel'
 import postcss from 'gulp-postcss'
 import sourcemaps from 'gulp-sourcemaps'
 import stylelint from 'gulp-stylelint'
-import gulpHash from 'gulp-hash'
-import gulpHtmlValidator from 'gulp-html-validator'
-import gulpFilter from 'gulp-filter'
-import gulpHtmlMin from 'gulp-htmlmin'
-import gulpRev from 'gulp-rev'
 import gulpCached from 'gulp-cached'
 import gulpEslint from 'gulp-eslint'
+import gulpFilter from 'gulp-filter'
+import gulpHash from 'gulp-hash'
+import gulpHtmlMin from 'gulp-htmlmin'
+import gulpHtmlValidator from 'gulp-html-validator'
+import gulpIf from 'gulp-if'
+import gulpPlumber from 'gulp-plumber'
 import gulpPrint from 'gulp-print'
 import gulpReplace from 'gulp-replace'
-import gulpIf from 'gulp-if'
+import gulpRev from 'gulp-rev'
 
 // PostCSS plugins
 import cssnano from 'cssnano'
@@ -143,12 +144,19 @@ task('css:lint', function csslint() {
 
 task('js', function js() {
   return src(patterns.js)
+    .pipe(gulpPlumber())
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(gulpIf(isDeployment, gulpRev()))
     .pipe(sourcemaps.write('.'))
     .pipe(dest(paths.dist))
     .pipe(collectGulpRevManifest(assetManifest))
+})
+
+task('js:lint', function jsLint() {
+  return src(patterns.js)
+    .pipe(gulpEslint())
+    .pipe(gulpEslint.format())
 })
 
 task('js:vendored', function jsVendored() {
@@ -264,7 +272,7 @@ task('watch', function setupWatch(done) {
         parallel('css', 'css:lint'))
 
   watch([patterns.js, patterns.jsVendored, '.babelrc'],
-        parallel('js', 'js:vendored')) // eslint here too?
+        parallel('js', 'js:vendored', 'js:lint'))
 
   watch([patterns.static],
         parallel('static'))
@@ -281,14 +289,14 @@ task('watch', function setupWatch(done) {
   done()
 })
 
-// TODO: robots.txt is clobbered back and forth by 'static' and 'hugo:build'
-// TODO: gulp's and hugo's compiling in-progress and error messages in browser
+// TODO: gulp's in-progress and error messages in browser
 
 task('build', parallel(
     'css',
     'css:lint',
     'js',
     'js:vendored',
+    'js:lint',
     'static',
     series(
       'hugo:build',

@@ -46,6 +46,7 @@
     "gulp-htmlmin": "^4.0.0",
     "gulp-if": "^2.0.2",
     "gulp-newer": "^1.4.0",
+    "gulp-plumber": "^1.2.0",
     "gulp-postcss": "^7.0.1",
     "gulp-print": "^5.0.0",
     "gulp-replace": "^0.6.1",
