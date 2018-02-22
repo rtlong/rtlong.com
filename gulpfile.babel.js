@@ -27,6 +27,7 @@ import gulpCached from 'gulp-cached'
 import gulpEslint from 'gulp-eslint'
 import gulpPrint from 'gulp-print'
 import gulpReplace from 'gulp-replace'
+import gulpIf from 'gulp-if'
 
 // PostCSS plugins
 import cssnano from 'cssnano'
@@ -34,6 +35,8 @@ import postcssCssnext from 'postcss-cssnext'
 import postcssImport from 'postcss-import'
 
 const browserSync = BrowserSync.create()
+
+const assetManifest = {}
 
 fontawesome.library.add(faBrands, faSolid)
 
@@ -119,14 +122,10 @@ task('css', function css() {
   return src(patterns.css)
     .pipe(sourcemaps.init())
     .pipe(postcss(postcssPlugins))
-    .pipe(gulpRev())
+    .pipe(gulpIf(isDeployment, gulpRev()))
     .pipe(sourcemaps.write('.'))
     .pipe(dest(paths.dist))
-    .pipe(gulpRev.manifest({
-      path: paths.assetManifest,
-      merge: true,
-    }))
-    .pipe(dest('.'))
+    .pipe(collectGulpRevManifest(assetManifest))
 })
 
 task('css:lint', function csslint() {
@@ -146,38 +145,25 @@ task('js', function js() {
   return src(patterns.js)
     .pipe(sourcemaps.init())
     .pipe(babel())
-    .pipe(gulpRev())
+    .pipe(gulpIf(isDeployment, gulpRev()))
     .pipe(sourcemaps.write('.'))
     .pipe(dest(paths.dist))
-    .pipe(gulpRev.manifest({
-      path: paths.assetManifest,
-      merge: true,
-    }))
-    .pipe(dest('.'))
+    .pipe(collectGulpRevManifest(assetManifest))
 })
 
 task('js:vendored', function jsVendored() {
   return src(patterns.jsVendored)
-    .pipe(gulpRev())
+    .pipe(gulpIf(isDeployment, gulpRev()))
     .pipe(dest(paths.dist))
-    .pipe(gulpRev.manifest({
-      path: paths.assetManifest,
-      merge: true,
-    }))
-    .pipe(dest('.'))
+    .pipe(collectGulpRevManifest(assetManifest))
 })
 
 task('static', function jsVendored() {
   return src(patterns.static)
     .pipe(dest(paths.dist))
-    .pipe(gulpRev())
-    // .pipe(browserSync.stream())
+    .pipe(gulpIf(isDeployment, gulpRev()))
     .pipe(dest(paths.dist))
-    .pipe(gulpRev.manifest({
-      path: paths.assetManifest,
-      merge: true,
-    }))
-    .pipe(dest('.'))
+    .pipe(collectGulpRevManifest(assetManifest))
 })
 
 task('hugo:build', function hugoBuild(done) {
@@ -206,12 +192,18 @@ task('hugo:build', function hugoBuild(done) {
 })
 
 task('hugo:post', function hugoPost() {
+  let assetReplacer = gulpReplace(/"(?:__assets|asset:)\/(.+?)"/g, (match, path) => {
+    let resolved = assetManifest[path] || path
+    // console.log('asset :', path, '=>', resolved)
+    return `"/${resolved}"`
+  })
+
   let faReplacer = gulpReplace(/%%icon:(fa\w*)-(\w+?)(?:\:(.+?))?%%/g, (match, familyName, iconName, fallback) => {
     let params = {
       prefix: familyName,
       iconName,
     }
-    console.log('fontAwesome replacer:', params)
+    // console.log('fontAwesome replacer:', params)
 
     let icon = fontawesome.findIconDefinition(params)
 
@@ -221,24 +213,21 @@ task('hugo:post', function hugoPost() {
     return icon ? fontawesome.icon(icon).html : fallback
   })
 
-  let filterHtml = gulpFilter('**/*.html')
+  let filterHtml = gulpFilter('**/*.html', { restore: true })
 
-  let pipeline = src(patterns.hugoOut)
-      .pipe(dest(paths.dist))
-      .pipe(filterHtml)
-      .pipe(faReplacer)
-
-  if (!isDev) {
-    pipeline = pipeline.pipe(gulpHtmlMin({
+  return src(patterns.hugoOut)
+    .pipe(filterHtml)
+    .pipe(faReplacer)
+    .pipe(assetReplacer)
+    .pipe(gulpIf(isDeployment(), gulpHtmlMin({
       collapseWhitespace: true,
       collapseBooleanAttributes: true,
       decodeEntities: true,
       removeEmptyAttributes: true,
       removeComments: true
-    }))
-  }
-
-  return pipeline.pipe(dest(paths.dist))
+    })))
+    .pipe(filterHtml.restore)
+    .pipe(dest(paths.dist))
 })
 
 const vnuPort = 8888
@@ -281,13 +270,10 @@ task('watch', function setupWatch(done) {
         parallel('static'))
 
   watch(patterns.hugoInputs,
-        parallel('hugo:build'))
-
-  watch(patterns.hugoOut, { delay: 500 },
-        parallel('hugo:post'))
+        series('hugo:build', 'hugo:post', 'validateHtml'))
 
   watch(patterns.public,
-        parallel('browsersync:reload', 'validateHtml'))
+        parallel('browsersync:reload'))
 
   watch([patterns.gulp, patterns.node],
         parallel('gulp:restart'))
@@ -298,26 +284,23 @@ task('watch', function setupWatch(done) {
 // TODO: robots.txt is clobbered back and forth by 'static' and 'hugo:build'
 // TODO: gulp's and hugo's compiling in-progress and error messages in browser
 
-task('build', series(
-  parallel(
+task('build', parallel(
     'css',
-    'css:lint'
-  ),
-  'js',
-  'js:vendored',
-  'static',
-  'hugo:build',
-  'hugo:post',
-  'validateHtml'
-))
+    'css:lint',
+    'js',
+    'js:vendored',
+    'static',
+    series(
+      'hugo:build',
+      'hugo:post',
+      'validateHtml')))
 
-task('default', series(
-  parallel(
-    'build',
-    'browsersync:start'
-  ),
-  'browsersync:seedCache',
-  'watch'))
+task('default', parallel(
+  'build',
+  'watch',
+  series(
+    'browsersync:start',
+    'browsersync:seedCache')))
 
 
 /// Helpers ///
@@ -352,6 +335,11 @@ function isStaging() {
   return process.env.STAGING
 }
 
+// if TRUE: build targets a deployed scenario
+function isDeployment() {
+  return !isDev()
+}
+
 function validatorReport() {
   return through2.obj(function (file, encoding, callback) {
     const data = JSON.parse(file.contents.toString())
@@ -360,5 +348,25 @@ function validatorReport() {
       console.log(chalk`{yellow ${path.relative(process.cwd(), file.path)}} {green ${msg.firstLine || ''}:${msg.lastLine || ''}} ${msg.message}`)
     })
     callback(null, file)
+  })
+}
+
+// similar to gulpRev.manifest, but collects manifest in an object rather than a file
+function collectGulpRevManifest(assetManifest) {
+  return through2.obj(function (file, enc, cb) {
+    // this transform is just a spy, always push throuhg the file:
+    this.push(file)
+
+    // Ignore all non-rev'd files
+		if (!file.path || !file.revOrigPath) {
+			cb()
+			return
+		}
+
+    const revisionedFile = path.relative(file.base, file.path)
+		const originalFile = path.join(path.dirname(revisionedFile), path.basename(file.revOrigPath))
+
+    assetManifest[originalFile] = revisionedFile
+    cb()
   })
 }

@@ -1,4 +1,3 @@
-{{ $assets := .Site.Data.assets }}
 {{ $.Scratch.Set "title" (delimit (slice (default .Site.Title .Title) .Site.Title | uniq) " - ") }}
 <!doctype html>
 <html class="no-js" lang="{{.Lang}}">
@@ -12,16 +11,16 @@
     <meta name="application-name" content="RTLong">
     <meta name="msapplication-TileColor" content="#00a0b0">
     <meta name="theme-color" content="#00a0b0">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00a0b0">
+    <link rel="apple-touch-icon" href="asset:/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="asset:/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="asset:/favicon-16x16.png">
+    <link rel="manifest" href="asset:/site.webmanifest">
+    <link rel="mask-icon" href="asset:/safari-pinned-tab.svg" color="#00a0b0">
     <!-- } -->
-    <link rel="stylesheet" href="/{{ index $assets "main.css" }}">
+    <link rel="stylesheet" href="asset:/main.css">
     <title>{{ $.Scratch.Get "title" }}</title>
-    <script async src="/{{ index $assets "modernizr-custom.js" }}"></script>
-    <script defer src="/{{ index $assets "main.js" }}"></script>
+    <script async src="asset:/modernizr-custom.js"></script>
+    <script defer src="asset:/main.js"></script>
     <noscript>
       <style>
        .noscript { display: block; }
