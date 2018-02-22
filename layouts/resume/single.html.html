@@ -73,12 +73,24 @@
         <div>
           <dt>On the web</dt>
           <dd>
-            {{ with .url }}
-              <a href="{{ . }}">Website</a>
-            {{ end }}
-            {{ range .profiles }}
-              <a href="{{ .url }}" title="{{ .network }}">{{ .network }}</a>
-            {{ end }}
+            <ul class="inline">
+              {{ with .url }}
+                <li class="print-only">
+                  <a href="{{ . }}">Website</a>
+                </li>
+              {{ end }}
+              {{ range .profiles }}
+                <li>
+                  <a href="{{ .url }}" title="{{ .network }}">
+                    {{ if .icon }}
+                      %%icon:{{.icon}}:{{.network}}%%
+                    {{ else }}
+                      {{ .network }}
+                    {{ end }}
+                  </a>
+                </li>
+              {{ end }}
+            </ul>
           </dd>
         </div>
       </dl>

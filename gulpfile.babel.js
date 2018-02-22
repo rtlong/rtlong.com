@@ -9,6 +9,9 @@ import through2 from 'through2'
 import chalk from 'chalk'
 import BrowserSync from 'browser-sync'
 import gulp, { task, src, dest, series, parallel, watch } from 'gulp'
+import fontawesome from '@fortawesome/fontawesome'
+import faSolid from '@fortawesome/fontawesome-free-solid'
+import faBrands from '@fortawesome/fontawesome-free-brands'
 
 // Gulp plugins
 import babel from 'gulp-babel'
@@ -23,6 +26,7 @@ import gulpRev from 'gulp-rev'
 import gulpCached from 'gulp-cached'
 import gulpEslint from 'gulp-eslint'
 import gulpPrint from 'gulp-print'
+import gulpReplace from 'gulp-replace'
 
 // PostCSS plugins
 import cssnano from 'cssnano'
@@ -30,6 +34,8 @@ import postcssCssnext from 'postcss-cssnext'
 import postcssImport from 'postcss-import'
 
 const browserSync = BrowserSync.create()
+
+fontawesome.library.add(faBrands, faSolid)
 
 const paths = {
   hugoOut: 'tmp/hugo-out/',
@@ -200,19 +206,39 @@ task('hugo:build', function hugoBuild(done) {
 })
 
 task('hugo:post', function hugoPost() {
+  let faReplacer = gulpReplace(/%%icon:(fa\w*)-(\w+?)(?:\:(.+?))?%%/g, (match, familyName, iconName, fallback) => {
+    let params = {
+      prefix: familyName,
+      iconName,
+    }
+    console.log('fontAwesome replacer:', params)
+
+    let icon = fontawesome.findIconDefinition(params)
+
+    if (!icon && !fallback)
+      throw(new Error(`fontAwesome icon not found: ${JSON.stringify(params)}`))
+
+    return icon ? fontawesome.icon(icon).html : fallback
+  })
+
   let filterHtml = gulpFilter('**/*.html')
-  return src(patterns.hugoOut)
-    .pipe(dest(paths.dist))
-    .pipe(filterHtml)
-    // .pipe(browserSync.stream())
-    .pipe(gulpHtmlMin({
+
+  let pipeline = src(patterns.hugoOut)
+      .pipe(dest(paths.dist))
+      .pipe(filterHtml)
+      .pipe(faReplacer)
+
+  if (!isDev) {
+    pipeline = pipeline.pipe(gulpHtmlMin({
       collapseWhitespace: true,
       collapseBooleanAttributes: true,
       decodeEntities: true,
       removeEmptyAttributes: true,
       removeComments: true
     }))
-    .pipe(dest(paths.dist))
+  }
+
+  return pipeline.pipe(dest(paths.dist))
 })
 
 const vnuPort = 8888
