@@ -1,25 +1,6 @@
-<div id="contentInfo" aria-hidden="true">
-  <div class="{{ with .Description }}{{else}}error{{end}}">
-    .Description: <code>{{ .Description }}</code>
-  </div>
-
-  <div class="{{ with .Title }}{{else}}error{{end}}">
-    .Title: <code>{{ .Title }}</code>
-  </div>
-
-  <div class="{{ with .Date }}{{else}}error{{end}}">
-    .Date: <code>{{ .Date }}</code>
-  </div>
-
-  {{ with .Scratch.Get "title" }}
-    <div>&lt;title&gt;: <code>{{ . }}</code></div>
-  {{ else }}
-    <div class="error">&lt;title&gt;: Scratch("Title") is unset</div>
-  {{ end }}
-</div>
-
 <div id="debugInfo" aria-hidden="true"></div>
-
-<!-- <script>
-     window.hugoPage = {{ . | jsonify | safeJS }};
-     </script> -->
+<script>
+  {{ with .OutputFormats.Get "json" -}}
+  window.pageJsonUrl = {{.RelPermalink}}
+  {{- end }}
+</script>

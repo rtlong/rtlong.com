@@ -1,1 +1,6 @@
-{{ . | jsonify }}
+{
+  "htmlTitle": {{ .Scratch.Get "title" | jsonify }},
+  "title": {{ .Title | jsonify }},
+  "description": {{ .Description | jsonify }},
+  "date": {{ .Date | jsonify }}
+}

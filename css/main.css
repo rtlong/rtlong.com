@@ -74,6 +74,29 @@ h6 {
   }
 }
 
+a {
+  color: initial;
+  text-decoration: none;
+
+  &.no-footnote {
+    @media screen {
+      text-decoration: underline;
+    }
+  }
+
+  & span.link-body {
+    text-decoration: underline;
+  }
+
+  &:hover {
+    color: var(--color-blue);
+
+    & span.link-body {
+      text-decoration: underline;
+    }
+  }
+}
+
 .browsermsg,
 .noscript {
   margin: 0;
@@ -131,9 +154,14 @@ div#debugInfo {
       border-bottom-width: 20px;
     }
 
+    @media print {
+      display: none;
+    }
+
     & > h1.title {
       flex: 1 0 auto;
-      margin: 0.5em 0;
+      margin: 0.5em 0.5em 0.5em 0;
+      font-size: 1.3em;
 
       & > a,
       & > a:visited,
@@ -145,7 +173,6 @@ div#debugInfo {
 
     & > nav {
       flex: 1 0 auto;
-      margin-left: 1em;
 
       & > ul {
         margin: 0;
@@ -161,7 +188,15 @@ div#debugInfo {
 
         & > li {
           flex: 0 0 auto;
-          padding: 0 10px;
+          padding: 0 0.3em;
+
+          & + li {
+            border-left: 1px solid var(--color-white);
+          }
+
+          &:last-child {
+            padding-right: 0;
+          }
 
           & > a {
             display: block;
@@ -175,8 +210,7 @@ div#debugInfo {
             }
 
             &:hover {
-              color: var(--color-white);
-              text-decoration: underline;
+              color: var(--color-yellow);
             }
           }
         }
@@ -278,12 +312,17 @@ div#debugInfo {
       white-space: pre-wrap;
     }
 
-    & ul.pill-list {
+    & ul.inline {
       list-style: none;
       margin: 0;
       padding: 0;
 
       & > li {
+        margin: 0.1em;
+        display: inline-block;
+      }
+
+      &.pill > li {
         margin: 0.1em 0.3em;
         padding: 0.1em 1em;
         background-color: var(--color-blue);
@@ -331,11 +370,6 @@ div#debugInfo {
           }
 
           & > header {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: baseline;
             margin: 0 0 1em 0;
 
             & h3 {
@@ -356,8 +390,17 @@ div#debugInfo {
               font-weight: bold;
             }
 
-            & .date-location {
-              text-align: right;
+            @media (--mediumwide-screens) {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: baseline;
+
+              & .date-location {
+                text-align: right;
+                max-width: 17em;
+                min-width: 12em;
+              }
             }
           }
         }
@@ -367,13 +410,36 @@ div#debugInfo {
             display: none;
           }
 
-          & .portrait {
-            float: left;
-            margin: 0 1em 1em 0;
+          & > .details {
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
           }
 
-          & > dl {
-            clear: both;
+          & ul.vitals,
+          & ul.links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            & > li {
+              vertical-align: middle;
+
+              & svg.svg-inline--fa {
+                font-size: 1.4em;
+              }
+            }
+          }
+
+          & ul.links {
+            text-align: right;
+          }
+
+          & li.email,
+          & li.phone {
+            & a .link-body {
+              text-decoration: none;
+            }
           }
         }
 
@@ -382,16 +448,24 @@ div#debugInfo {
             margin: 0;
             padding-left: 1em;
             border-left: 2px solid var(--color-blue);
+
+            & + blockquote {
+              margin-top: 2em;
+            }
           }
         }
       }
 
-      & dl {
-        & dt {
+      & dt {
+        & dl {
           float: left;
           clear: left;
           width: 10em;
         }
+      }
+
+      & ul.highlights {
+        padding-left: 1em;
       }
     }
   }
@@ -409,17 +483,6 @@ div#debugInfo {
   }
 }
 
-#contentInfo {
-  background: black;
-  color: white;
-  display: none;
-  padding: 1em var(--layout-page-gutter);
-
-  & > div.error {
-    color: red;
-  }
-}
-
 @media (--narrow-screens) {
   :root {
     --layout-page-gutter: 2em;
@@ -433,41 +496,54 @@ div#debugInfo {
   }
 }
 
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
 @media print {
   *,
   *::before,
   *::after {
     background: transparent !important;
+    border-color: var(--color-black) !important;
     color: var(--color-black) !important;
     box-shadow: none !important;
     text-shadow: none !important;
   }
 
-  a,
-  a:visited {
-    text-decoration: underline;
+  a .footnote {
+    text-decoration-style: unset;
+    text-decoration-line: none;
+    font-size: 75%;
+
+    &::before {
+      content: "["
+    }
+    &::after {
+      content: "]"
+    }
   }
 
-  a[href]::after {
-    content: " (" attr(href) ")";
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    & a .footnote {
+      font-size: 60%;
+    }
   }
 
-  h1.title a::after {
-    content: "";
-  }
 
   abbr[title]::after {
     content: " (" attr(title) ")";
   }
 
-  a[href^="#"]::after,
-  a[href^="javascript:"]::after {
-    content: "";
-  }
-
   pre,
   blockquote {
-    border: 1px solid var(--color-black);
     page-break-inside: avoid;
   }
 

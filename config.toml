@@ -5,6 +5,7 @@ buildExpired = false # include content already expired
 relativeURLs = false # enable this to make all relative URLs relative to content root. Note that this does not affect absolute URLs.
 canonifyURLs = false
 debug = false
+defaultContentLanguage = "en"
 disableLiveReload = false
 disableRSS = false # Do not build RSS files
 disableSitemap = false # Do not build Sitemap file
@@ -16,11 +17,14 @@ disableHugoGeneratorInject = false # Do not inject generator meta tag on homepag
 disableKinds = [] # Allows you to disable all page types and will render nothing related to 'kind'; values = "page", "home", "section", "taxonomy", "taxonomyTerm", "RSS", "sitemap", "robotsTXT", "404"
 disablePathToLower = false # Do not make the url/path to lowercase
 enableEmoji = true # Enable Emoji emoticons support for page content; see emoji-cheat-sheet.com
-enableMissingTranslationPlaceholders = false # Show a placeholder instead of the default value or an empty string if a translation is missing
+enableMissingTranslationPlaceholders = true # Show a placeholder instead of the default value or an empty string if a translation is missing
 ignoreFiles = [
   "README\\.md$",
-  "resume/.*\\.js",
+  "resume/.*\\.js$",
+  "resume/package(-lock)\\.json$",
   "resume/node_modules",
+  "resume/tmp",
+  "resume/rendered",
   "resume/package\\..+",
   "resume/scripts/",
 ]
@@ -28,12 +32,15 @@ metaDataFormat = "yaml" # "toml","yaml", or "json"
 staticDir = []
 publishDir = "tmp/hugo-out"
 # theme = "rtlong"
-title = "RTLong"
 uglyURLs = false # if true, use /filename.html instead of /filename/
 verbose = false # verbose output
 verboseLog = true # verbose logging
 watch = true # watch filesystem for changes and recreate as needed
 # End built-ins
+
+[languages]
+[languages.en]
+title = "RTLong"
 copyright = "2015 Ryan Taylor Long"
 
 [taxonomies]

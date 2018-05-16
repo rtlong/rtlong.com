@@ -8,18 +8,18 @@
 
 {{ define "date-range" }}
 <div class="date">
-  {{- .start | dateFormat .format -}}
-  &nbsp;&mdash;&nbsp;
-  {{- with .end -}}
-    {{ . | dateFormat $.format }}
-  {{- else -}}
+  <time datetime="{{.start}}">{{ .start | dateFormat .format }}</time>
+  &ndash;
+  {{ with .end }}
+    <time datetime="{{.}}">{{ . | dateFormat $.format }}</time>
+  {{ else }}
     present
-  {{- end -}}
+  {{ end }}
 </div>
 {{end}}
 
 {{ define "main" }}
-{{ $resumeKey := default .File.BaseFileName (.Params.resume.version) }}
+{{ $resumeKey := default .File.BaseFileName .Params.resume.version }}
 {{ $resumeData := index .Site.Data.resume $resumeKey }}
 {{ $dateFormat := $.Param "resume.dateFormat" }}
 
@@ -29,71 +29,56 @@
       <h2>{{ .name }}</h2>
       <h3>{{ .label }}</h3>
 
-      {{ with .image }}
-        <div class="portrait">
-          <img src="{{ . }}" width="100" alt="my portrait"/>
-        </div>
-      {{ end }}
+      <div class="details">
+        <ul class="vitals">
+          {{ with .email }}
+            <li class="email">
+              <a class="no-footnote" href="mailto:{{.}}">{{ . }}</a>
+            </li>
+          {{ end }}
+
+          {{ with .phone }}
+            <li class="phone">
+              <a class="no-footnote" href="tel:{{.}}">{{ . }}</a>
+            </li>
+          {{ end }}
+
+          {{ with .location }}
+            <li>
+              <address class="location">
+                {{ .city }}, {{ .region }}, {{ .countryCode }}
+              </address>
+            </li>
+          {{ end }}
+        </ul>
+
+        <ul class="links">
+          {{ with .url }}
+            <li>
+              <a href="{{ . }}">{{.}}</a>
+            </li>
+          {{ end }}
+
+          {{ range .profiles }}
+            <li>
+              <a href="{{ .url }}" title="{{ .network }}">
+                {{ if .icon }}
+                  <i icon="{{.icon}}" title="{{.network}}"></i>
+                {{ end -}}
+                <span class="link-body">{{with .username}}{{.}}{{end}}</span>
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
 
       {{ with .summary }}
         <p class="summary">{{ . | markdownify }}</p>
       {{ end }}
 
-      <dl class="">
-        {{ with .availability }}
-          <div>
-            <dt>Availability</dt>
-            <dd>{{ . }}</dd>
-          </div>
-        {{ end }}
-
-        {{ with .email }}
-          <div>
-            <dt>Email</dt>
-            <dd><a href="mailto:{{.}}">{{ . }}</a></dd>
-          </div>
-        {{ end }}
-
-        {{ with .phone }}
-          <div>
-            <dt>Phone</dt>
-            <dd><a href="tel:{{.}}">{{ . }}</a></dd>
-          </div>
-        {{ end }}
-
-        {{ with .location }}
-          <div>
-            <dt>Location</dt>
-            <dd>
-              <address>{{ .city }}, {{ .region }}, {{ .countryCode }}</address>
-            </dd>
-          </div>
-        {{ end }}
-
-        <div>
-          <dt>On the web</dt>
-          <dd>
-            <ul class="inline">
-              {{ with .url }}
-                <li class="print-only">
-                  <a href="{{ . }}">Website</a>
-                </li>
-              {{ end }}
-              {{ range .profiles }}
-                <li>
-                  <a href="{{ .url }}" title="{{ .network }}">
-                    {{ if .icon }}
-                      %%icon:{{.icon}}:{{.network}}%%
-                    {{ else }}
-                      {{ .network }}
-                    {{ end }}
-                  </a>
-                </li>
-              {{ end }}
-            </ul>
-          </dd>
-        </div>
-      </dl>
+      {{ with .availability }}
+        <div class="availability">{{ . }}</div>
+      {{ end }}
     </section>
   {{ end }}
 
@@ -190,13 +175,13 @@
           </ul>
 
           <!--
-          {{ with .keywords }}
-            <ul class="pill-list">
-              {{ range . }}
-                <li>{{.}}</li>
-              {{ end }}
-            </ul>
-          {{ end }}
+               {{ with .keywords }}
+               <ul class="inline pill">
+               {{ range . }}
+               <li>{{.}}</li>
+               {{ end }}
+               </ul>
+               {{ end }}
           -->
         </div>
       {{ end }}
@@ -347,14 +332,15 @@
     <section class="references">
       <h2>References</h2>
       {{ range . }}
-          <blockquote>
-            <p>{{ .body | markdownify }}</p>
-            <cite>{{ .name | markdownify }}</cite>
-          </blockquote>
+        <blockquote>
+          <p>{{ .body | markdownify }}</p>
+          <cite>{{ .name | markdownify }}</cite>
+        </blockquote>
       {{ end }}
     </section>
   {{ end }}
 
+  <hr>
   <div class="lastModified">
     Last Modified:
     <time datetime="{{ .meta.lastModified | dateFormat "2006-01-02T15:04:05Z07:00" }}">

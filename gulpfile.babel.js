@@ -3,7 +3,8 @@
 import path from 'path'
 import { spawn } from 'child_process'
 
-import kexec from 'kexec'
+import merge2 from 'merge2'
+import split2 from 'split2'
 import vnuJar from 'vnu-jar'
 import through2 from 'through2'
 import chalk from 'chalk'
@@ -29,6 +30,8 @@ import gulpPlumber from 'gulp-plumber'
 import gulpPrint from 'gulp-print'
 import gulpReplace from 'gulp-replace'
 import gulpRev from 'gulp-rev'
+import del from 'del'
+import gulpCheerio from 'gulp-cheerio'
 
 // PostCSS plugins
 import cssnano from 'cssnano'
@@ -58,6 +61,7 @@ const patterns = {
   hugoInputs: [
     'config.*',
     'content/**/*',
+    'i18n/**/*',
     'layouts/**/*',
     'data/*.json',
     'data/resume/*.yml',
@@ -77,10 +81,9 @@ const patterns = {
   hugoOutHtml: [path.join(paths.hugoOut, '/**/*.html')],
 }
 
-task('gulp:restart', function gulpRestart() {
-  console.log('Gulpfile or node_modules changed. Gulp restarting.')
-  if (vnuPid) process.kill(vnuPid)
-  kexec(process.argv0, process.argv.slice(1))
+task('gulp:die', function gulpRestart() {
+  console.log('Gulpfile or node_modules changed. Gulp exiting.')
+  process.exit(0)
 })
 
 task('browsersync:start', function browserSyncStart(done) {
@@ -113,7 +116,7 @@ task('css', function css() {
     }),
   ]
 
-  if (!isDev()) {
+  if (isDeployment()) {
     postcssPlugins.push(cssnano({
       preset: 'default',
       safe: true,
@@ -174,18 +177,23 @@ task('static', function jsVendored() {
     .pipe(collectGulpRevManifest(assetManifest))
 })
 
+task('hugo:clean', function clean() {
+  return del(paths.hugoOut)
+})
+
 task('hugo:build', function hugoBuild(done) {
-  var args = []
+  var args = [
+    '--verbose',
+    '--i18n-warnings'
+  ]
   var baseURL = hugoBaseURL()
   if (baseURL) args = args.concat(['--baseURL', baseURL])
 
   browserSync.notify(`Building...`)
-  // console.log('Running Hugo to regenerate the site.')
-  // console.log('hugo', args.join(' '))
 
   let hugo = spawn('hugo', args, {
     env: hugoEnv(),
-    stdio: 'inherit',
+    stdio: ['ignore', 'pipe', 'inherit'],
   })
 
   hugo.on('close', (code) => {
@@ -197,6 +205,10 @@ task('hugo:build', function hugoBuild(done) {
     }
     done()
   })
+
+  hugo.stdout.pipe(split2()).on('data', line => {
+    if (/^(ERROR|WARN) /.test(line)) console.log(line)
+  })
 })
 
 task('hugo:post', function hugoPost() {
@@ -206,28 +218,89 @@ task('hugo:post', function hugoPost() {
     return `"/${resolved}"`
   })
 
-  let faReplacer = gulpReplace(/%%icon:(fa\w*)-(\w+?)(?:\:(.+?))?%%/g, (match, familyName, iconName, fallback) => {
-    let params = {
-      prefix: familyName,
-      iconName,
-    }
-    // console.log('fontAwesome replacer:', params)
+  let faReplacer = gulpCheerio(($, file, done) => {
+    $('i[icon]').each((_, el) => {
+      let $el = $(el)
 
-    let icon = fontawesome.findIconDefinition(params)
+      let [ familyName, iconName ] = $el.attr('icon').split('-', 2)
+      let title = $el.attr('title')
+      let text = $el.text()
+      let fallback = text.trim.length > 0 ? text : title
 
-    if (!icon && !fallback)
-      throw(new Error(`fontAwesome icon not found: ${JSON.stringify(params)}`))
+      let params = {
+        prefix: familyName,
+        iconName,
+      }
+      let iconDefinition = fontawesome.findIconDefinition(params)
+      if (iconDefinition) {
+        let opts = {}
+        if (title) opts.title = title
+        $el.replaceWith(fontawesome.icon(iconDefinition, opts).html)
+      } else if (fallback) {
+        $el.replaceWith(fallback)
+        console.warn('fa: Icon not found. Fallback used.', { params, fallback })
+      } else {
+        throw(new Error(`fontAwesome icon not found: ${JSON.stringify(params)}`))
+      }
+    })
 
-    return icon ? fontawesome.icon(icon).html : fallback
+    done()
+  })
+
+  let footnotes = gulpCheerio(($, file, done) => {
+    $('main').each((_, section) => {
+      let links = new Map()
+      let nextIdx = 0
+      $('a[href]', section).each((index, el) => {
+        let $el = $(el)
+        let href = $el.attr('href')
+
+        let $linkBodySpan = $el.find('span.link-body')
+
+        if ($linkBodySpan.length === 0) {
+          $el.html(`<span class="link-body">${$el.html()}</span>`)
+          $linkBodySpan = $el.find('span.link-body')
+        } else if ($linkBodySpan.length > 1) {
+          console.warn('Nore than 1 span.link-body found in element:', $el)
+          return
+        }
+
+        if ($el.hasClass('no-footnote') || href === $el.text().trim())
+          return
+
+        let idx
+        if (links.has(href)) {
+          idx = links.get(href)
+        } else {
+          idx = ++nextIdx
+          links.set(href, idx)
+        }
+
+        $linkBodySpan.first()
+          .after(`<sup class="footnote print-only" aria-hidden="true">${idx}</sup>`)
+      })
+
+      let footnotes = $('<ol class="footnotes print-only"></ol>')
+
+      let linksA = Array.from(links.entries()).sort((a,b) => a[1] - b[1])
+      linksA.forEach(([href, idx]) => {
+        footnotes.append(`<li value="${idx}">${href}</li>`)
+      })
+
+      $(section).append('<hr>')
+      $(section).append(footnotes)
+    })
+    done()
   })
 
   let filterHtml = gulpFilter('**/*.html', { restore: true })
 
   return src(patterns.hugoOut)
     .pipe(filterHtml)
-    .pipe(faReplacer)
     .pipe(assetReplacer)
-    .pipe(gulpIf(isDeployment(), gulpHtmlMin({
+    .pipe(faReplacer)
+    .pipe(footnotes)
+    .pipe(gulpIf(isDeployment, gulpHtmlMin({
       collapseWhitespace: true,
       collapseBooleanAttributes: true,
       decodeEntities: true,
@@ -239,32 +312,55 @@ task('hugo:post', function hugoPost() {
 })
 
 const vnuPort = 8888
-let vnuPid = null
-// function startVnu(done) {
-//   if (vnuPid) {
-//     done()
-//     return
-//   }
-//   const ready = 'oejs.Server:main: Started'
-//   const proc = spawn('java', ['-cp', vnuJar, 'nu.validator.servlet.Main', vnuPort])
-//   vnuPid = proc.pid
-//   proc.on('close', (code) => {
-//     console.log(`vnu.jar process exited with code ${code}`)
-//   })
-//   proc.stderr.on('data', data => {
-//     if (data.includes(ready)) done()
-//   })
-//   proc.stdout.on('data', data => {
-//     if (data.includes(ready)) done()
-//   })
-// }
+let vnuP = null
+function vnuStart() {
+  const readyRegex = /oejs.Server:main: Started/
 
-task('validateHtml', function validateHtml() {
+  if (process.env.VNU_EXTERNAL) {
+    return Promise.resolve(process.env.VNU_EXTERNAL)
+  }
+
+  vnuP = vnuP || new Promise((resolve, reject) => {
+    const proc = spawn('java', ['-cp', vnuJar, 'nu.validator.servlet.Main', vnuPort], {
+      stdio: ['ignore', 'pipe', 'pipe']
+    })
+
+    let timeout = setTimeout(() => {
+      reject(new Error('timed out waiting for Vnu to become ready'))
+    }, 15000)
+
+    process.on('exit', () => {
+      console.log('Killing Vnu.jar')
+      proc.kill()
+    })
+
+    proc.on('close', (code) => {
+      console.log(`vnu.jar process exited with code ${code}`)
+    })
+
+    merge2([ proc.stdout, proc.stderr ])
+      .pipe(split2())
+      .on('data', line => {
+        // console.log('VNU', line)
+        if (readyRegex.test(line)) {
+          clearTimeout(timeout)
+
+          resolve(`http://localhost:${vnuPort}/`)
+        }
+      })
+  })
+  return vnuP
+}
+
+task('html:lint', async function validateHtml() {
+  const validatorURL = await vnuStart()
   return src(patterns.publicHtml)
-    .pipe(gulpHtmlValidator({
-      validator: `http://localhost:${vnuPort}/`
-    }))
+    .pipe(gulpHtmlValidator({ validator: validatorURL }))
     .pipe(validatorReport())
+})
+
+task('clean', function clean() {
+  return del(paths.dist)
 })
 
 task('watch', function setupWatch(done) {
@@ -278,20 +374,22 @@ task('watch', function setupWatch(done) {
         parallel('static'))
 
   watch(patterns.hugoInputs,
-        series('hugo:build', 'hugo:post', 'validateHtml'))
+        series('hugo:clean', 'hugo:build', 'hugo:post', 'html:lint'))
 
   watch(patterns.public,
-        parallel('browsersync:reload'))
+        parallel('browsersync:reload'), { delay: 500 })
 
   watch([patterns.gulp, patterns.node],
-        parallel('gulp:restart'))
+        parallel('gulp:die'))
 
   done()
 })
 
 // TODO: gulp's in-progress and error messages in browser
 
-task('build', parallel(
+task('build', series(
+  'clean',
+  parallel(
     'css',
     'css:lint',
     'js',
@@ -299,17 +397,18 @@ task('build', parallel(
     'js:lint',
     'static',
     series(
+      'hugo:clean',
       'hugo:build',
       'hugo:post',
-      'validateHtml')))
+      'html:lint'))))
 
-task('default', parallel(
-  'build',
-  'watch',
-  series(
-    'browsersync:start',
-    'browsersync:seedCache')))
-
+task('default',
+     parallel(
+       'browsersync:start',
+       series(
+         'build',
+         'browsersync:seedCache',
+         'watch')))
 
 /// Helpers ///
 
@@ -378,3 +477,11 @@ function collectGulpRevManifest(assetManifest) {
     cb()
   })
 }
+
+process.on('uncaughtException', (err) => {
+  console.err('uncaughtException', err)
+})
+
+process.on('SIGINT', () => {
+  process.exit()
+})

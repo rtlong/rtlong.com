@@ -5,12 +5,11 @@
 {{ end }}
 
 {{ .Content }}
-
-<!-- <ul> -->
+{{ with .Site.GetPage "section" "blog" }}
   {{ range .Data.Pages }}
     {{ .Render "summary" }}
   {{ end }}
-  <!-- </ul> -->
+{{ end }}
 
 <div class="templateSource">_default/list.html.html</div>
 

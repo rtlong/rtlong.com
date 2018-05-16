@@ -28,8 +28,6 @@
     </noscript>
   </head>
   <body>
-    {{ if getenv "DEV" }}{{ partial "contentInfo.html" . }}{{ end }}
-
     <div id="container">
       <div class="noscript">Your browser has Javascript disabled; some features of this site may not function as intended.</div>
       <div class="browsermsg">You are using an <strong>outdated</strong> browser. Please <a href="https://www.whatbrowser.org">upgrade your browser</a> to improve your experience.</div>
@@ -67,5 +65,6 @@
       </footer>
     </div>
 
+    {{ if getenv "DEV" }}{{ partial "contentInfo.html" . }}{{ end }}
   </body>
 </html>
